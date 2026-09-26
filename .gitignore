@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+
+# Numba cache
+*.nbi
+*.nbc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Docs
+docs/_build/
+docs/reference/parameters.md
+
+# Simulation output (default out_dir is the parfile name)
+*.h5
+*.asc
+pynr.log
+parameters.par
+/gauge_wave/
+/linear_wave/
+/kerr_schild/
+/schwarzschild_*/

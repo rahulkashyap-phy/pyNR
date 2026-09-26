@@ -1,0 +1,44 @@
+# Apples-with-Apples linear wave: a small-amplitude gravitational plane wave
+# travelling along +x in TT gauge (h_yy = -h_zz = A sin(2 pi (x - t)/d)).
+# Expected: gyy - 1 keeps amplitude A (no growth, no damping at 4th order),
+# the wave returns to its initial profile every crossing time t = d,
+# and Psi4r = A (2 pi/d)^2 sin(2 pi (x - t)/d) on the +x axis.
+
+ActiveThorns = "ADMBase Exact ADMEvolve MoL Dissipation WeylScal4 IOHDF5 IOScalar IOBasic"
+
+Cactus::terminate       = "time"
+Cactus::cctk_final_time = 5.0
+
+CoordBase::xmin = -0.5
+CoordBase::xmax =  0.5
+CoordBase::ymin = -0.02
+CoordBase::ymax =  0.02
+CoordBase::zmin = -0.02
+CoordBase::zmax =  0.02
+CoordBase::dx = 0.02
+CoordBase::dy = 0.02
+CoordBase::dz = 0.02
+CoordBase::periodic_x = yes
+CoordBase::periodic_y = yes
+CoordBase::periodic_z = yes
+
+MoL::ODE_Method = "RK4"
+Dissipation::epsdis = 0.0
+
+ADMBase::initial_data  = "exact"
+ADMBase::initial_lapse = "one"
+ADMBase::initial_shift = "zero"
+ADMBase::evolution_method       = "ADMEvolve"
+ADMBase::lapse_evolution_method = "static"
+Exact::exact_model = "Minkowski/linear wave"
+Exact::Minkowski_linear_wave__amplitude = 1e-8
+Exact::Minkowski_linear_wave__lambda    = 1.0
+
+IO::out_dir = $parfile
+IOBasic::outInfo_every = 50
+IOBasic::outInfo_vars  = "ADMBase::gyy"
+IOScalar::outScalar_every = 5
+IOScalar::outScalar_vars  = "ADMBase::gyy ADMBase::gzz"
+IOHDF5::out2D_every = 25
+IOHDF5::out2D_vars  = "ADMBase::gyy WeylScal4::Psi4r"
+IOHDF5::out2D_planes = "xy"

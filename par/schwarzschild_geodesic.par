@@ -1,0 +1,43 @@
+# Schwarzschild in isotropic coordinates with geodesic slicing (alpha = 1,
+# beta = 0): observers fall freely from rest at the throat r = M/2.
+# Physics: the throat reaches the singularity at proper time t = pi M.
+# Expected in pyNR: the run fails much earlier (t ~ 0.7 M; earlier for smaller dx),
+# starting at the grid point nearest the unresolved puncture r = 0
+# (psi ~ M/2r). This is the "puncture problem" -- see
+# docs/problems/schwarzschild_geodesic.md for the discussion.
+
+ActiveThorns = "ADMBase Exact ADMEvolve MoL Dissipation ADMConstraints IOScalar IOBasic IOHDF5"
+
+Cactus::terminate       = "time"
+Cactus::cctk_final_time = 4.0
+
+CoordBase::xmin = -6.1
+CoordBase::xmax =  6.1
+CoordBase::ymin = -6.1
+CoordBase::ymax =  6.1
+CoordBase::zmin = -6.1
+CoordBase::zmax =  6.1
+CoordBase::dx = 0.2
+CoordBase::dy = 0.2
+CoordBase::dz = 0.2
+
+MoL::ODE_Method = "RK4"
+Dissipation::epsdis = 0.1
+
+ADMBase::initial_data  = "exact"
+ADMBase::initial_lapse = "one"
+ADMBase::initial_shift = "zero"
+ADMBase::evolution_method       = "ADMEvolve"
+ADMBase::lapse_evolution_method = "static"
+Exact::exact_model = "Schwarzschild/isotropic"
+Exact::Schwarzschild_isotropic__mass = 1.0
+
+ADMEvolve::bound = "static"
+
+IO::out_dir = $parfile
+IOBasic::outInfo_every = 10
+IOBasic::outInfo_vars  = "ADMBase::gxx ADMBase::kxx"
+IOScalar::outScalar_every = 2
+IOScalar::outScalar_vars  = "ADMBase::gxx ADMBase::kxx ADMConstraints::H"
+IOHDF5::out2D_every = 20
+IOHDF5::out2D_vars  = "ADMBase::gxx ADMBase::kxx"

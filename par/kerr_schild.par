@@ -1,0 +1,47 @@
+# A rotating (chi = 0.6) Kerr black hole in Kerr-Schild coordinates, evolved
+# with the exact (stationary) lapse and shift and simple excision.
+# Expected: in the continuum nothing changes; numerically d/dt of the metric is
+# O(dx^4) truncation error at t = 0 (see tests). max|H| ~ 0.03 at t = 0, ~0.1 at
+# t = 10 M, then the ADM constraint-violating mode grows exponentially and the
+# run aborts at t ~ 23 M (measured; ~1.5 min on 12 cores).
+# See docs/problems/kerr_schild.md for the Schwarzschild stability table.
+
+ActiveThorns = "ADMBase Exact ADMEvolve MoL Dissipation ADMConstraints IOHDF5 IOScalar IOBasic"
+
+Cactus::terminate       = "time"
+Cactus::cctk_final_time = 40.0
+
+CoordBase::xmin = -8.125
+CoordBase::xmax =  8.125
+CoordBase::ymin = -8.125
+CoordBase::ymax =  8.125
+CoordBase::zmin = -8.125
+CoordBase::zmax =  8.125
+CoordBase::dx = 0.25
+CoordBase::dy = 0.25
+CoordBase::dz = 0.25
+
+MoL::ODE_Method = "RK4"
+Dissipation::epsdis = 0.3
+
+ADMBase::initial_data  = "exact"
+ADMBase::initial_lapse = "exact"
+ADMBase::initial_shift = "exact"
+ADMBase::evolution_method       = "ADMEvolve"
+ADMBase::lapse_evolution_method = "static"
+Exact::exact_model = "Kerr/Kerr-Schild"
+Exact::Kerr_KerrSchild__mass = 1.0
+Exact::Kerr_KerrSchild__spin = 0.6
+
+ADMEvolve::bound = "static"
+ADMEvolve::excision_radius = 1.6     # ~0.9 r_+ (r_+ = 1.8 M for chi = 0.6)
+
+IO::out_dir = $parfile
+IOBasic::outInfo_every = 40
+IOBasic::outInfo_vars  = "ADMBase::gxx ADMConstraints::H"
+IOScalar::outScalar_every = 2
+IOScalar::outScalar_vars  = "ADMBase::metric ADMConstraints::H"
+IOHDF5::out2D_every = 40
+IOHDF5::out2D_vars  = "ADMBase::gxx ADMBase::kxx ADMConstraints::H"
+IOHDF5::out_every = 320
+IOHDF5::out_vars  = "ADMBase::gxx"

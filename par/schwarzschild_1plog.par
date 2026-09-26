@@ -1,0 +1,45 @@
+# Schwarzschild puncture (isotropic coordinates) with "1+log" slicing,
+# dt(alpha) = -2 alpha K, a pre-collapsed initial lapse alpha = psi^-2 and
+# zero shift.
+# Physics: the lapse collapses at the puncture (singularity avoidance); with
+# zero shift the slice then stretches near the horizon.
+# Expected in pyNR v0.1 (measured, dx = 0.2): min(alp) falls 0.066 -> 0.023 by
+# t = 1 M, then overshoots negative near the puncture; the run aborts at
+# t ~ 4.5 M. Same "puncture problem" as schwarzschild_geodesic.par; this is the
+# acceptance test for the future BSSN + moving-puncture thorns.
+
+ActiveThorns = "ADMBase Exact ADMEvolve MoL Dissipation ADMConstraints IOScalar IOBasic IOHDF5"
+
+Cactus::terminate       = "time"
+Cactus::cctk_final_time = 6.0
+
+CoordBase::xmin = -10.1
+CoordBase::xmax =  10.1
+CoordBase::ymin = -10.1
+CoordBase::ymax =  10.1
+CoordBase::zmin = -10.1
+CoordBase::zmax =  10.1
+CoordBase::dx = 0.2
+CoordBase::dy = 0.2
+CoordBase::dz = 0.2
+
+MoL::ODE_Method = "RK4"
+Dissipation::epsdis = 0.2
+
+ADMBase::initial_data  = "exact"
+ADMBase::initial_lapse = "psi^-2"
+ADMBase::initial_shift = "zero"
+ADMBase::evolution_method       = "ADMEvolve"
+ADMBase::lapse_evolution_method = "1+log"
+Exact::exact_model = "Schwarzschild/isotropic"
+Exact::Schwarzschild_isotropic__mass = 1.0
+
+ADMEvolve::bound = "radiative"
+
+IO::out_dir = $parfile
+IOBasic::outInfo_every = 20
+IOBasic::outInfo_vars  = "ADMBase::alp ADMBase::gxx"
+IOScalar::outScalar_every = 4
+IOScalar::outScalar_vars  = "ADMBase::alp ADMBase::gxx ADMConstraints::H"
+IOHDF5::out2D_every = 40
+IOHDF5::out2D_vars  = "ADMBase::alp ADMBase::gxx ADMBase::kxx"

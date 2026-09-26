@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+pip install --no-deps -e .
+# warm the Numba cache so the first notebook cell is fast
+pynr run par/gauge_wave.par --set Cactus::cctk_final_time=0.01 --out /tmp/pynr_warmup > /dev/null

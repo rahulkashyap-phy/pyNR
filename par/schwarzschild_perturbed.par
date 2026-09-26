@@ -1,0 +1,67 @@
+# A Schwarzschild black hole (M = 1) in Kerr-Schild coordinates, "rung" by an
+# l = 2, m = 0 Gaussian perturbation of the metric. Psi4 is extracted on
+# geodesic spheres and decomposed into -2Y_lm modes.
+#
+# Physics target: the l = 2 quasi-normal ringing, M*omega = 0.3737 - 0.0890 i
+# (period 16.8 M, decay time 11.2 M).
+# Expected in pyNR v0.1 (measured): only m = 0 / even-l modes are excited;
+# the burst reaches r = 6 at t ~ 8-10 M; from t ~ 15 M the ADM
+# constraint-violating mode grows (e-fold ~ 7 M, l = 4 dominated) and hides
+# the ringdown. The run completes to t = 36 M. A clean QNM needs BSSN/Z4c
+# (roadmap); see docs/problems/perturbed_bh.md.
+#
+# Cost: 135^3 points, ~15 min on a 12-core laptop.
+
+ActiveThorns = "ADMBase Exact Perturb ADMEvolve MoL Dissipation ADMConstraints
+                WeylScal4 Multipole IOHDF5 IOScalar IOBasic"
+
+Cactus::terminate       = "time"
+Cactus::cctk_final_time = 36.0
+
+CoordBase::xmin = -16.125
+CoordBase::xmax =  16.125
+CoordBase::ymin = -16.125
+CoordBase::ymax =  16.125
+CoordBase::zmin = -16.125
+CoordBase::zmax =  16.125
+CoordBase::dx   = 0.25
+CoordBase::dy   = 0.25
+CoordBase::dz   = 0.25
+
+Time::dtfac = 0.25
+MoL::ODE_Method = "RK4"
+Dissipation::epsdis = 0.3
+
+ADMBase::initial_data  = "exact"
+ADMBase::initial_lapse = "exact"
+ADMBase::initial_shift = "exact"
+ADMBase::evolution_method       = "ADMEvolve"
+ADMBase::lapse_evolution_method = "static"     # keep the exact stationary gauge
+Exact::exact_model = "Kerr/Kerr-Schild"
+Exact::Kerr_KerrSchild__mass = 1.0
+Exact::Kerr_KerrSchild__spin = 0.0
+
+ADMEvolve::bound = "radiative"
+ADMEvolve::excision_radius = 1.8               # horizon at r = 2M; see ADMEvolve docs
+
+Perturb::amplitude = 1e-3
+Perturb::radius    = 4.0
+Perturb::width     = 1.0
+Perturb::l = 2
+Perturb::m = 0
+
+Multipole::variables = "WeylScal4::Psi4r{sw=-2 cmplx='WeylScal4::Psi4i' name='Psi4'}"
+Multipole::nradii    = 2
+Multipole::radius[0] = 6.0
+Multipole::radius[1] = 8.0
+Multipole::l_max     = 4
+Multipole::out_every = 4
+Multipole::geodesic_level = 4
+
+IO::out_dir = $parfile
+IOBasic::outInfo_every = 40
+IOBasic::outInfo_vars  = "ADMBase::alp ADMConstraints::H"
+IOScalar::outScalar_every = 4
+IOScalar::outScalar_vars  = "ADMBase::gxx ADMConstraints::H"
+IOHDF5::out2D_every = 80
+IOHDF5::out2D_vars  = "ADMBase::gxx WeylScal4::Psi4r ADMConstraints::H"
