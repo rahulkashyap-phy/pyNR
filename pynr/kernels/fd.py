@@ -1,16 +1,18 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 r"""Fourth-order centred finite-difference stencils (Numba, pointwise).
 
-For a grid function :math:`f` sampled with spacing :math:`h`,
+For a grid function $f$ sampled with spacing $h$,
 
-.. math::
-
+$$
     \partial_x f \approx \frac{f_{i-2} - 8 f_{i-1} + 8 f_{i+1} - f_{i+2}}{12 h},
     \qquad
     \partial_x^2 f \approx \frac{-f_{i-2} + 16 f_{i-1} - 30 f_i + 16 f_{i+1} - f_{i+2}}{12 h^2},
+$$ (eq-fd-stencils)
 
-and mixed derivatives :math:`\partial_x\partial_y f` are the tensor product of
+and mixed derivatives $\partial_x\partial_y f$ are the tensor product of
 two first-derivative stencils. All three have truncation error
-:math:`\mathcal{O}(h^4)` and need two points on each side, so a kernel using
+$\mathcal{O}(h^4)$ and need two points on each side, so a kernel using
 them can update points ``[2, n-2)``; dissipation needs three (see
 :mod:`pynr.kernels.dissipation`), which is why ``Driver::ghost_size = 3``.
 
@@ -27,7 +29,7 @@ _O1 = (-2, -1, 1, 2)
 
 @njit(inline="always")
 def d1(U, c, i, j, k, d, idx):
-    """:math:`\\partial_d U_c` at ``(i, j, k)``; ``idx`` holds inverse spacings."""
+    """$\\partial_d U_c$ at ``(i, j, k)``; ``idx`` holds inverse spacings."""
     if d == 0:
         return (U[c, i - 2, j, k] - 8.0 * U[c, i - 1, j, k] + 8.0 * U[c, i + 1, j, k]
                 - U[c, i + 2, j, k]) * (idx[0] / 12.0)
@@ -40,7 +42,7 @@ def d1(U, c, i, j, k, d, idx):
 
 @njit(inline="always")
 def d2(U, c, i, j, k, a, b, idx):
-    """:math:`\\partial_a \\partial_b U_c` at ``(i, j, k)``."""
+    """$\\partial_a \\partial_b U_c$ at ``(i, j, k)``."""
     if a == b:
         if a == 0:
             s = (-U[c, i - 2, j, k] + 16.0 * U[c, i - 1, j, k] - 30.0 * U[c, i, j, k]

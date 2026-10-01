@@ -1,17 +1,20 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 r"""Outer boundary conditions on the ghost zones.
 
 Two kinds of operation:
 
-* **RHS conditions** set :math:`\partial_t u` on ghost points during each
+* **RHS conditions** set $\partial_t u$ on ghost points during each
   MoL substep:
 
-  - ``static``: :math:`\partial_t u = 0` (ghosts keep their initial values);
+  - ``static``: $\partial_t u = 0$ (ghosts keep their initial values);
   - ``radiative``: Sommerfeld outgoing-wave condition (ET's *NewRad*)
 
-    .. math::
-       \partial_t u = -\frac{v}{r}\left[x^i\partial_i u + (u - u_\infty)\right],
+    $$
+        \partial_t u = -\frac{v}{r}\left[x^i\partial_i u + (u - u_\infty)\right],
+    $$ (eq-sommerfeld)
 
-    for :math:`u = u_\infty + f(t-r)/r`, with :math:`v = 1` and
+    for $u = u_\infty + f(t-r)/r$, with $v = 1$ and
     second-order one-sided differences pointing into the grid.
 
 * **State conditions** overwrite ghost values after each substep:

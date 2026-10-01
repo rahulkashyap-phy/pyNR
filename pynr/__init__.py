@@ -1,3 +1,5 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 """pyNR — numerical relativity in Python, organised like the Einstein Toolkit.
 
 The package mirrors the Cactus/Einstein Toolkit (ET) architecture:

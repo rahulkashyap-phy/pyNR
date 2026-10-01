@@ -1,3 +1,5 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 """Base class and registry for thorns.
 
 A thorn is a class that

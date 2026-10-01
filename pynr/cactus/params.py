@@ -1,3 +1,5 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 """Parameter declarations (the pyNR equivalent of ``param.ccl``).
 
 Each thorn declares its parameters as a dict of :class:`Param` objects::

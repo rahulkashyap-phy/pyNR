@@ -28,3 +28,23 @@ parameters.par
 /linear_wave/
 /kerr_schild/
 /schwarzschild_*/
+
+# Documentation data and generated figures (see docs/reproducing-figures.md)
+# docs/data/
+docs/figures/
+# Data the documentation figures are drawn from (~92 KB): exempt from the
+# simulation-output rules above.
+!docs/data/gauge_wave/*/alp_profile.dat
+!docs/data/gauge_wave/dx0.02_t10/parameters.par
+!docs/data/gauge_wave/dx0.02_t10/pynr.log
+!docs/data/kerr_schild/H.norm2.asc
+!docs/data/kerr_schild/H.maximum.asc
+!docs/data/kerr_schild/parameters.par
+!docs/data/kerr_schild/pynr.log
+!docs/data/schwarzschild_perturbed/mp_Psi4_l2_m0_r6.00.asc
+!docs/data/schwarzschild_perturbed/mp_Psi4_l4_m0_r6.00.asc
+!docs/data/schwarzschild_perturbed/parameters.par
+!docs/data/schwarzschild_perturbed/pynr.log
+
+# Simulation output written by the notebooks
+notebooks/*/

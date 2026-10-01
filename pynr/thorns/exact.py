@@ -1,3 +1,5 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 r"""Exact: analytic spacetimes as initial data (and reference solutions).
 
 Select with ``ADMBase::initial_data = "exact"`` and ``Exact::exact_model``.
@@ -11,42 +13,45 @@ Models
 **Minkowski/gauge wave** (Apples-with-Apples test; Alcubierre et al. 2004).
 Flat space in a time-dependent slicing:
 
-.. math::
+$$
     ds^2 = -H dt^2 + H dx^2 + dy^2 + dz^2,\qquad
     H = 1 - A\sin\frac{2\pi(x-t)}{d},
+$$ (eq-gauge-wave)
 
-so :math:`\alpha=\sqrt H`, :math:`\gamma_{xx}=H`,
-:math:`K_{xx} = -\frac{\pi A}{d}\cos\frac{2\pi(x-t)}{d}/\sqrt H`.
+so $\alpha=\sqrt H$, $\gamma_{xx}=H$,
+$K_{xx} = -\frac{\pi A}{d}\cos\frac{2\pi(x-t)}{d}/\sqrt H$.
 Evolve with harmonic slicing; the exact solution is known for all time.
 
 **Minkowski/linear wave** (AwA). A linearised plane gravitational wave in TT gauge,
-:math:`\gamma_{yy} = 1 + b`, :math:`\gamma_{zz} = 1 - b`,
-:math:`b = A\sin\frac{2\pi(x-t)}{d}`, :math:`K_{ij} = -\tfrac12\partial_t\gamma_{ij}`.
-For it :math:`\Psi_4 = \ddot h_+ - i \ddot h_\times` with :math:`h_+ = b` along :math:`x`.
+$\gamma_{yy} = 1 + b$, $\gamma_{zz} = 1 - b$,
+$b = A\sin\frac{2\pi(x-t)}{d}$, $K_{ij} = -\tfrac12\partial_t\gamma_{ij}$.
+For it $\Psi_4 = \ddot h_+ - i \ddot h_\times$ with $h_+ = b$ along $x$.
 
 **Schwarzschild/isotropic**. Time-symmetric slice in isotropic coordinates,
 
-.. math::
+$$
     \gamma_{ij} = \psi^4\delta_{ij},\quad \psi = 1 + \frac{M}{2r},\quad K_{ij}=0,
+$$ (eq-schwarzschild-isotropic)
 
-with ``exact`` lapse :math:`\alpha = (1 - M/2r)/(1 + M/2r)` (static solution;
-it vanishes at the horizon :math:`r=M/2`), or ``psi^-2`` ("pre-collapsed"
+with ``exact`` lapse $\alpha = (1 - M/2r)/(1 + M/2r)$ (static solution;
+it vanishes at the horizon $r=M/2$), or ``psi^-2`` ("pre-collapsed"
 lapse used for moving-puncture runs), or ``one`` (geodesic slicing — the
-slice hits the singularity at :math:`t=\pi M`).
+slice hits the singularity at $t=\pi M$).
 
 **Kerr/Kerr-Schild**. Horizon-penetrating coordinates for a Kerr black hole
-of mass :math:`M` and spin :math:`a = \chi M` along :math:`z`:
-:math:`g_{\mu\nu} = \eta_{\mu\nu} + 2H\,l_\mu l_\nu` with
+of mass $M$ and spin $a = \chi M$ along $z$:
+$g_{\mu\nu} = \eta_{\mu\nu} + 2H\,l_\mu l_\nu$ with
 
-.. math::
+$$
     H = \frac{M r^3}{r^4 + a^2 z^2},\quad
     l_\mu = \left(1, \frac{rx + ay}{r^2+a^2}, \frac{ry - ax}{r^2+a^2}, \frac{z}{r}\right),
+$$ (eq-kerr-schild)
 
-giving :math:`\gamma_{ij} = \delta_{ij} + 2Hl_il_j`, :math:`\alpha = (1+2H)^{-1/2}`,
-:math:`\beta^i = 2Hl^i/(1+2H)`. Since the data are stationary,
-:math:`K_{ij} = (D_i\beta_j + D_j\beta_i)/2\alpha`; we evaluate it by 4th-order
-differencing of the analytic metric with step :math:`10^{-4}`, not on the grid.
-:math:`\chi = 0` is Schwarzschild in ingoing Eddington-Finkelstein coordinates.
+giving $\gamma_{ij} = \delta_{ij} + 2Hl_il_j$, $\alpha = (1+2H)^{-1/2}$,
+$\beta^i = 2Hl^i/(1+2H)$. Since the data are stationary,
+$K_{ij} = (D_i\beta_j + D_j\beta_i)/2\alpha$; we evaluate it by 4th-order
+differencing of the analytic metric with step $10^{-4}$, not on the grid.
+$\chi = 0$ is Schwarzschild in ingoing Eddington-Finkelstein coordinates.
 The singularity is inside the horizon; use ``ADMEvolve::excision_radius``.
 """
 

@@ -8,8 +8,10 @@
 Run locally:
 
 ```bash
-pip install -e ".[notebook]"      # from the repository root
-cd notebooks && jupyter lab
+source .venv/bin/activate         # from the repository root (see docs/installation.md)
+pip install -e ".[notebook]"
+python -m ipykernel install --user --name pynr --display-name "Python (pyNR .venv)"
+cd notebooks && jupyter lab       # or open the .ipynb in VS Code -> Select Kernel -> Python (pyNR .venv)
 ```
 
 The notebooks use relative paths (`../par/...`), so start Jupyter in this

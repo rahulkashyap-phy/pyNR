@@ -1,0 +1,45 @@
+# Apples-with-Apples gauge wave (Alcubierre et al. 2004, CQG 21, 589).
+# Flat spacetime in a harmonic slicing that oscillates along x. The exact
+# solution is known at all times, so this checks accuracy and convergence.
+# Expected: max(alp) stays at sqrt(1 + A) = 1.0488 and min(alp) at sqrt(1 - A);
+# the error converges at 4th order (halve dx -> error / 16).
+
+ActiveThorns = "ADMBase Exact ADMEvolve MoL Dissipation ADMConstraints IOHDF5 IOScalar IOBasic"
+
+Cactus::terminate   = "time"
+Cactus::cctk_final_time = 10.0     # 10 crossing times
+
+CoordBase::xmin = -0.5
+CoordBase::xmax =  0.5
+CoordBase::ymin = -0.02
+CoordBase::ymax =  0.02
+CoordBase::zmin = -0.02
+CoordBase::zmax =  0.02
+CoordBase::dx   = 0.02
+CoordBase::dy   = 0.02
+CoordBase::dz   = 0.02
+CoordBase::periodic_x = yes
+CoordBase::periodic_y = yes
+CoordBase::periodic_z = yes
+
+Time::dtfac = 0.25
+MoL::ODE_Method = "RK4"
+Dissipation::epsdis = 0.0
+
+ADMBase::initial_data  = "exact"
+ADMBase::initial_lapse = "exact"
+ADMBase::initial_shift = "exact"
+ADMBase::evolution_method       = "ADMEvolve"
+ADMBase::lapse_evolution_method = "harmonic"
+Exact::exact_model = "Minkowski/gauge wave"
+Exact::Minkowski_gauge_wave__amplitude = 0.1
+Exact::Minkowski_gauge_wave__lambda    = 1.0
+
+IO::out_dir = $parfile
+IOBasic::outInfo_every = 50
+IOBasic::outInfo_vars  = "ADMBase::alp ADMConstraints::H"
+IOScalar::outScalar_every = 5
+IOScalar::outScalar_vars  = "ADMBase::alp ADMBase::gxx ADMConstraints::H"
+IOHDF5::out2D_every = 50
+IOHDF5::out2D_vars  = "ADMBase::alp ADMBase::gxx"
+IOHDF5::out2D_planes = "xy"

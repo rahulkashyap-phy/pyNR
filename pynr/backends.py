@@ -1,3 +1,5 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 """Kernel backends: pick the implementation of each compute kernel by name.
 
 ``Driver::backend`` selects one of:

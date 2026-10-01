@@ -1,24 +1,29 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 r"""ADMEvolve: evolve the ADM equations (see :mod:`pynr.kernels.adm` for the equations).
 
 Activated with ``ADMBase::evolution_method = "ADMEvolve"``. The slicing is set
 by ``ADMBase::lapse_evolution_method``:
 
-==============  ===============================================  =============================
-keyword         equation                                          typical use
-==============  ===============================================  =============================
-``static``      :math:`\partial_t\alpha = 0`                      stationary tests
-``harmonic``    :math:`\partial_t\alpha = -\alpha^2 K`            gauge wave; singularity avoiding
-``1+log``       :math:`\partial_t\alpha = -2\alpha K`             black holes (Bona-Massó family)
-==============  ===============================================  =============================
+.. table:: Slicing conditions selected by ``ADMBase::lapse_evolution_method``.
+   :name: tab-slicings
+
+   ==============  ================================  ==============================================
+   keyword         typical use                       equation
+   ==============  ================================  ==============================================
+   ``static``      stationary tests                  $\partial_t\alpha = 0$
+   ``harmonic``    gauge wave; singularity avoiding  $\partial_t\alpha = -\alpha^2 K$
+   ``1+log``       black holes (Bona-Massó family)   $\partial_t\alpha = -2\alpha K$
+   ==============  ================================  ==============================================
 
 Outer boundaries (``ADMEvolve::bound``): ``static``, ``radiative`` or
 ``flat``; periodic directions from ``CoordBase::periodic_*`` are always
 synchronised.
 
 Excision: with ``excision_radius > 0`` every point with
-:math:`r <` ``excision_radius`` gets :math:`\partial_t u = 0` (after dissipation
+$r <$ ``excision_radius`` gets $\partial_t u = 0$ (after dissipation
 is added), so the region is frozen at its initial values; non-finite initial
-values there (e.g. at :math:`r = 0`) are replaced by flat space. This is the
+values there (e.g. at $r = 0$) are replaced by flat space. This is the
 simplest possible excision. It is legitimate only if the excised region lies
 inside the horizon, where all characteristics point inward, and if the
 stencils of points outside never reach deep into it. In practice choose the

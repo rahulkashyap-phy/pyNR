@@ -1,7 +1,9 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 """Dissipation: Kreiss-Oliger dissipation on every MoL-evolved variable.
 
 See :mod:`pynr.kernels.dissipation` for the operator. ``Dissipation::epsdis``
-is the strength :math:`\\epsilon` (same name and meaning as in the ET).
+is the strength $\\epsilon$ (same name and meaning as in the ET).
 """
 
 from pynr.cactus import Param, Thorn, register_thorn

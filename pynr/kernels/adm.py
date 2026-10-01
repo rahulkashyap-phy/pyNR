@@ -1,60 +1,70 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 r"""Numba kernels for the ADM (3+1) equations in vacuum.
 
 Variables
 ---------
 All ADM variables live in one contiguous array ``U[16, nx, ny, nz]``:
 
-=====  ==============================  ==============================
-index  variable                        meaning
-=====  ==============================  ==============================
-0-5    ``gxx gxy gxz gyy gyz gzz``     spatial metric :math:`\gamma_{ij}`
-6-11   ``kxx kxy kxz kyy kyz kzz``     extrinsic curvature :math:`K_{ij}`
-12     ``alp``                         lapse :math:`\alpha`
-13-15  ``betax betay betaz``           shift :math:`\beta^i`
-=====  ==============================  ==============================
+.. table:: Layout of the ADM state array ``U``.
+   :name: tab-adm-state
+
+   =====  ==============================  ==============================
+   index  variable                        meaning
+   =====  ==============================  ==============================
+   0-5    ``gxx gxy gxz gyy gyz gzz``     spatial metric $\gamma_{ij}$
+   6-11   ``kxx kxy kxz kyy kyz kzz``     extrinsic curvature $K_{ij}$
+   12     ``alp``                         lapse $\alpha$
+   13-15  ``betax betay betaz``           shift $\beta^i$
+   =====  ==============================  ==============================
 
 Evolution equations (Arnowitt-Deser-Misner / York form)
 -------------------------------------------------------
 
-.. math::
-
+$$
     \partial_t \gamma_{ij} &= -2\alpha K_{ij} + \mathcal{L}_\beta \gamma_{ij}, \\
     \partial_t K_{ij} &= -D_i D_j \alpha
         + \alpha\left(R_{ij} + K K_{ij} - 2 K_{ik} K^k{}_j\right)
         + \mathcal{L}_\beta K_{ij},
+$$ (eq-adm-evolution)
 
-with :math:`\mathcal{L}_\beta T_{ij} = \beta^k\partial_k T_{ij}
-+ T_{kj}\partial_i\beta^k + T_{ik}\partial_j\beta^k` and
-:math:`D_iD_j\alpha = \partial_i\partial_j\alpha - \Gamma^k_{ij}\partial_k\alpha`.
+with
+
+$$
+    \mathcal{L}_\beta T_{ij} = \beta^k\partial_k T_{ij}
+        + T_{kj}\partial_i\beta^k + T_{ik}\partial_j\beta^k
+$$ (eq-lie-derivative)
+
+and $D_iD_j\alpha = \partial_i\partial_j\alpha - \Gamma^k_{ij}\partial_k\alpha$.
 
 The Ricci tensor is computed from its definition,
 
-.. math::
-
+$$
     R_{ij} = \partial_k \Gamma^k_{ij} - \partial_j \Gamma^k_{ki}
            + \Gamma^k_{kl}\Gamma^l_{ij} - \Gamma^k_{jl}\Gamma^l_{ki},
+$$ (eq-ricci)
 
 expanding the derivatives of the Christoffel symbols pointwise with
-:math:`\partial_m\gamma^{kl} = -\gamma^{ka}\gamma^{lb}\partial_m\gamma_{ab}`
-and :math:`\Gamma^k_{ki} = \partial_i \ln\sqrt{\gamma}`:
+$\partial_m\gamma^{kl} = -\gamma^{ka}\gamma^{lb}\partial_m\gamma_{ab}$
+and $\Gamma^k_{ki} = \partial_i \ln\sqrt{\gamma}$:
 
-.. math::
-
+$$
     \partial_k\Gamma^k_{ij} &= (\partial_k\gamma^{kl})\Gamma_{lij}
       + \tfrac12\gamma^{kl}(\partial_k\partial_i\gamma_{lj}
       + \partial_k\partial_j\gamma_{li} - \partial_k\partial_l\gamma_{ij}),\\
     \partial_j\Gamma^k_{ki} &= \tfrac12\left(\partial_j\gamma^{kl}\,\partial_i\gamma_{kl}
       + \gamma^{kl}\partial_i\partial_j\gamma_{kl}\right).
+$$ (eq-dgamma-contractions)
 
 Only first and second derivatives of the metric are needed: no extra storage
 and a single pass over the grid. (The NumPy reference
-:mod:`pynr.kernels.adm_numpy` forms the full :math:`\partial_m\Gamma^k_{ij}`
+:mod:`pynr.kernels.adm_numpy` forms the full $\partial_m\Gamma^k_{ij}$
 instead — an independent check of this algebra.)
 
 Slicing (``lapse_method``): 0 static, 1 harmonic
-(:math:`\partial_t\alpha = -\alpha^2 K`), 2 "1+log"
-(:math:`\partial_t\alpha = -2\alpha K`); with ``advect_lapse`` the term
-:math:`\beta^k\partial_k\alpha` is added. The shift is kept static.
+($\partial_t\alpha = -\alpha^2 K$), 2 "1+log"
+($\partial_t\alpha = -2\alpha K$); with ``advect_lapse`` the term
+$\beta^k\partial_k\alpha$ is added. The shift is kept static.
 
 The plain ADM system is only weakly hyperbolic — it is the right place to
 *learn* 3+1 but it will eventually go unstable for black holes. That is a
@@ -179,7 +189,7 @@ def _geometry(U, i, j, k, idx, g, gu, dg, ddg, Gl, G, dgu, W, R, t1, t2):
 def adm_rhs(U, rhs, idx, ng, lapse_method, advect_lapse, x, y, z, excision_r2):
     """Right-hand side of the ADM equations on interior points ``[ng, n-ng)``.
 
-    Points with :math:`x^2+y^2+z^2 < ` ``excision_r2`` get zero RHS (frozen,
+    Points with $x^2+y^2+z^2 < $ ``excision_r2`` get zero RHS (frozen,
     "poor man's excision"). Ghost points are left untouched — boundary
     conditions fill them (:mod:`pynr.kernels.boundary`).
     """
@@ -286,9 +296,11 @@ def _covariant_dK(U, i, j, k, idx, G, K, dK, DK, t1):
 def adm_constraints(U, H, M, idx, ng):
     r"""Hamiltonian and momentum constraints (vacuum).
 
-    .. math::
+    $$
         H = R + K^2 - K_{ij}K^{ij}, \qquad
         M_i = D_j K^j{}_i - D_i K = \gamma^{jk}(D_k K_{ji} - D_i K_{jk}).
+    $$ (eq-constraints-kernel)
+
     """
     nx, ny, nz = U.shape[1], U.shape[2], U.shape[3]
     for i in prange(ng, nx - ng):
@@ -335,22 +347,24 @@ def adm_constraints(U, H, M, idx, ng):
 
 @njit(parallel=True, **_JIT)
 def weyl_psi4(U, psi4re, psi4im, idx, ng, x, y, z):
-    r"""Newman-Penrose :math:`\Psi_4` from 3+1 data (vacuum).
+    r"""Newman-Penrose $\Psi_4$ from 3+1 data (vacuum).
 
     With the electric and magnetic parts of the Weyl tensor
 
-    .. math::
+    $$
         E_{ij} = R_{ij} + K K_{ij} - K_{ik}K^k{}_j, \qquad
         B_{ij} = \epsilon_{(i}{}^{kl} D_{|k|} K_{l\,j)},
+    $$ (eq-weyl-electric-magnetic)
 
-    and an orthonormal triad :math:`(e_r, e_\theta, e_\phi)` built by
-    Gram-Schmidt from the coordinate radial, :math:`\theta` and :math:`\phi`
-    directions, :math:`\bar m = (e_\theta - i e_\phi)/\sqrt2`, we compute
+    and an orthonormal triad $(e_r, e_\theta, e_\phi)$ built by
+    Gram-Schmidt from the coordinate radial, $\theta$ and $\phi$
+    directions, $\bar m = (e_\theta - i e_\phi)/\sqrt2$, we compute
 
-    .. math::
+    $$
         \Psi_4 = -(E_{ij} - i B_{ij})\,\bar m^i \bar m^j,
+    $$ (eq-psi4-tetrad)
 
-    normalised so that for an outgoing linear wave :math:`\Psi_4 = \ddot h_+ - i\ddot h_\times`
+    normalised so that for an outgoing linear wave $\Psi_4 = \ddot h_+ - i\ddot h_\times$
     (the convention used by the ET's WeylScal4 and by kuibit).
     """
     nx, ny, nz = U.shape[1], U.shape[2], U.shape[3]

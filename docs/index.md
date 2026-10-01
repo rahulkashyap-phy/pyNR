@@ -2,6 +2,9 @@
 
 **Numerical relativity in Python, organised like the Einstein Toolkit.**
 
+*Rahul Kashyap, Indian Institute of Technology Bombay* · <rahulkashyap@iitb.ac.in>
+· Apache-2.0, attribution required: [how to cite and credit](license.md)
+
 pyNR is a teaching and prototyping code. It solves Einstein's equations in 3+1
 form on a uniform 3D grid, with the lecture notes written into the code
 documentation. You read the equations on these pages and the lines that
@@ -26,9 +29,11 @@ implement them sit right next to each other.
 :caption: Getting started
 
 installation
+license
 running-online
 problems/index
 visualization
+reproducing-figures
 ```
 
 ```{toctree}

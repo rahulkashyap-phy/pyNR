@@ -7,10 +7,11 @@ name = "pynr"
 dynamic = ["version"]
 description = "A teaching-oriented numerical relativity code in Python, structured like the Einstein Toolkit and accelerated with Numba."
 readme = "README.md"
-license = "MIT"
-license-files = ["LICENSE"]
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
 requires-python = ">=3.10"
-authors = [{ name = "Rahul Kashyap", email = "rahulkashyap.phy@gmail.com" }]
+authors = [{ name = "Rahul Kashyap", email = "rahulkashyap@iitb.ac.in" }]
+maintainers = [{ name = "Rahul Kashyap", email = "rahulkashyap@iitb.ac.in" }]
 keywords = ["numerical relativity", "general relativity", "gravitational waves", "einstein toolkit", "numba"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -51,7 +52,7 @@ Source = "https://github.com/rahulkashyap-phy/pyNR"
 path = "pynr/__init__.py"
 
 [tool.hatch.build.targets.sdist]
-include = ["pynr", "par", "tests", "README.md", "LICENSE"]
+include = ["pynr", "par", "tests", "README.md", "LICENSE", "NOTICE", "CITATION.cff"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

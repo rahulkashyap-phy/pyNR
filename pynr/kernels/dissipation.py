@@ -1,19 +1,21 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 r"""Kreiss-Oliger artificial dissipation.
 
 Centred finite differences do not damp modes at the grid scale; nonlinear
 terms feed them and they grow. Kreiss-Oliger dissipation adds a
 higher-derivative term, of order higher than the scheme, to every RHS:
 
-.. math::
-
+$$
     \partial_t u \mathrel{+}= \frac{\epsilon}{64}\sum_{d} h_d^{5}\,\partial_d^{6} u
     \approx \frac{\epsilon}{64}\sum_d \frac{1}{h_d}
     \left(u_{-3} - 6u_{-2} + 15u_{-1} - 20u_0 + 15u_{+1} - 6u_{+2} + u_{+3}\right).
+$$ (eq-kreiss-oliger)
 
-For a Fourier mode :math:`e^{ikx}` the stencil gives :math:`-(2-2\cos kh)^3 \le 0`,
-so the term only damps, and most strongly at :math:`kh=\pi`. It is
-:math:`\mathcal{O}(h^5)`, below the 4th-order accuracy of the derivatives.
-Stability needs :math:`0 \le \epsilon \lesssim 1` (with CFL factor 0.25).
+For a Fourier mode $e^{ikx}$ the stencil gives $-(2-2\cos kh)^3 \le 0$,
+so the term only damps, and most strongly at $kh=\pi$. It is
+$\mathcal{O}(h^5)$, below the 4th-order accuracy of the derivatives.
+Stability needs $0 \le \epsilon \lesssim 1$ (with CFL factor 0.25).
 """
 
 from numba import njit, prange

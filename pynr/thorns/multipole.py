@@ -1,12 +1,15 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 r"""Multipole: spin-weighted multipole decomposition on geodesic spheres.
 
-For each extraction radius :math:`R` the complex field
-:math:`f = f_r + i f_i` (e.g. :math:`\Psi_4`) is interpolated to the points
+For each extraction radius $R$ the complex field
+$f = f_r + i f_i$ (e.g. $\Psi_4$) is interpolated to the points
 of a geodesic sphere (:mod:`pynr.utils.geodesic`) and projected
 
-.. math::
+$$
     f^{\ell m}(t, R) = \oint f\;{}_s\bar Y_{\ell m}\,d\Omega
                     \approx \sum_i w_i\, f(R\hat n_i)\;{}_s\bar Y_{\ell m}(\hat n_i).
+$$ (eq-multipole-projection)
 
 Output files use the ET Multipole ASCII format, which kuibit reads directly::
 
@@ -18,9 +21,9 @@ Output files use the ET Multipole ASCII format, which kuibit reads directly::
 
 Choosing radii: the sphere must lie inside the grid (away from the outer
 boundary by a few wavelengths) and far enough from the source that the
-wave zone is reached, :math:`R \gtrsim 10\text{-}20\,M` for teaching runs.
-Finite-radius :math:`\Psi_4` differs from the value at infinity by
-:math:`\mathcal{O}(1/R)`; extrapolate in :math:`R` or use kuibit's
+wave zone is reached, $R \gtrsim 10\text{-}20\,M$ for teaching runs.
+Finite-radius $\Psi_4$ differs from the value at infinity by
+$\mathcal{O}(1/R)$; extrapolate in $R$ or use kuibit's
 Nakano perturbative extrapolation.
 """
 

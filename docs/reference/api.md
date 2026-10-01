@@ -2,33 +2,42 @@
 
 ## Flesh
 
-```{automodule} pynr.cactus.simulation
+```{eval-rst}
+.. automodule:: pynr.cactus.simulation
 ```
 
-```{automodule} pynr.cactus.thorn
+```{eval-rst}
+.. automodule:: pynr.cactus.thorn
 ```
 
-```{automodule} pynr.cactus.params
+```{eval-rst}
+.. automodule:: pynr.cactus.params
 ```
 
-```{automodule} pynr.cactus.schedule
+```{eval-rst}
+.. automodule:: pynr.cactus.schedule
 ```
 
-```{automodule} pynr.cactus.gridfunctions
+```{eval-rst}
+.. automodule:: pynr.cactus.gridfunctions
 ```
 
-```{automodule} pynr.cactus.parfile
+```{eval-rst}
+.. automodule:: pynr.cactus.parfile
 ```
 
 ## Backends
 
-```{automodule} pynr.backends
+```{eval-rst}
+.. automodule:: pynr.backends
 ```
 
 ## Thorns
 
-```{automodule} pynr.thorns
+```{eval-rst}
+.. automodule:: pynr.thorns
 ```
 
-```{automodule} pynr.thorns.io
+```{eval-rst}
+.. automodule:: pynr.thorns.io
 ```

@@ -1,0 +1,29 @@
+pyNR simulation 'gauge_wave': 14 thorns active
+  UniformGrid(shape=(57, 9, 9), xmin=[-0.5, -0.02, -0.02], xmax=[0.5, 0.02, 0.02], dx=[0.02, 0.02, 0.02], nghost=3), dt = 0.005, backend = numba
+Schedule:
+  INITIAL:
+      ADMBase::initial_flat
+      Exact::initial_data
+  POSTINITIAL:
+      ADMEvolve::sanitize_excision
+      MoL::post_initial
+  EVOL:
+      MoL::step
+  POSTSTEP:
+      MoL::check_nan
+  OUTPUT:
+      IOHDF5::output
+      IOScalar::output
+      IOBasic::output
+INFO (Exact): initial data from 'Minkowski/gauge wave'
+Done: iteration 2000, t = 10, wall time 3.41 s
+  STARTUP          0.000 s
+  BASEGRID         0.000 s
+  INITIAL          0.000 s
+  POSTINITIAL      0.000 s
+  ANALYSIS         0.001 s
+  OUTPUT           0.007 s
+  PRESTEP          0.001 s
+  EVOL             3.382 s
+  POSTSTEP         0.011 s
+  TERMINATE        0.000 s

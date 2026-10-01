@@ -6,6 +6,13 @@ Build locally:
 pip install -e ".[docs]"                                   # from the repository root
 python -m pynr thorns --markdown > docs/reference/parameters.md   # generated, git-ignored
 sphinx-build -b html docs docs/_build/html
+```
+
+Equations, tables and figures are numbered. In Markdown pages write
+`$$ ... $$ (eq-label)`, then cite with ``Eq. {eq}`eq-label` `` and ``{numref}`tab-label` ``.
+In docstrings use `$...$`/`$$...$$ (eq-label)`; `docs/conf.py` translates them.
+
+```bash
 open docs/_build/html/index.html
 ```
 
@@ -16,6 +23,8 @@ open docs/_build/html/index.html
 | `theory/` | lecture notes, rendered from the module docstrings (`automodule`) |
 | `notes/` | notes imported from TiddlyWiki (`python scripts/tiddlywiki2md.py …`) |
 | `framework.md`, `utilities.md`, `performance.md`, `roadmap.md` | code design |
+| `data/` | the simulation data behind every figure (kuibit-readable); see `data/README.md` |
+| `figures/` | figures (`*.png`) and the settings of the runs that made them (`*_settings.md`, included by the pages); redraw from `data/` with `python scripts/make_doc_figures.py plot` |
 | `devlog/` | development log, one dated entry per milestone |
 | `reference/` | parameter reference (generated) and API |
 | `conf.py` | Sphinx configuration |

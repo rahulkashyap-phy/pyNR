@@ -1,22 +1,25 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 r"""Geodesic (icosahedral) grids on the sphere and their quadrature weights.
 
 A geodesic grid starts from the 12 vertices of an icosahedron; each
 refinement splits every triangle into four and projects the new vertices to
-the unit sphere. Level :math:`n` has :math:`10\cdot4^n + 2` nearly uniformly
+the unit sphere. Level $n$ has $10\cdot4^n + 2$ nearly uniformly
 spaced points (level 4: 2562, level 5: 10242) and **no pole singularity**,
-unlike a :math:`(\theta,\phi)` grid where points bunch up at the poles.
+unlike a $(\theta,\phi)$ grid where points bunch up at the poles.
 
-Quadrature: each spherical triangle's area :math:`A_t` (from
-:math:`\tan(A/2) = |a\cdot(b\times c)| / (1 + a\cdot b + b\cdot c + c\cdot a)`,
+Quadrature: each spherical triangle's area $A_t$ (from
+$\tan(A/2) = |a\cdot(b\times c)| / (1 + a\cdot b + b\cdot c + c\cdot a)$,
 Van Oosterom & Strackee 1983) is split equally among its three vertices, so
-:math:`\sum_i w_i = 4\pi` exactly and
+$\sum_i w_i = 4\pi$ exactly and
 
-.. math::
+$$
     \oint f\,d\Omega \approx \sum_i w_i f(\hat n_i),
+$$ (eq-sphere-quadrature)
 
 with second-order convergence in the point spacing. For smooth
-integrands of low multipole order (GW extraction with :math:`\ell \le 8`)
-level 4-5 gives relative errors :math:`\sim 10^{-4}-10^{-5}`.
+integrands of low multipole order (GW extraction with $\ell \le 8$)
+level 4-5 gives relative errors $\sim 10^{-4}-10^{-5}$.
 """
 
 from __future__ import annotations

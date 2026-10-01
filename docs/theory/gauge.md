@@ -1,7 +1,8 @@
 # Gauge: lapse and shift
 
-```{automodule} pynr.thorns.admevolve
-:no-members:
+```{eval-rst}
+.. automodule:: pynr.thorns.admevolve
+   :no-members:
 ```
 
 ## Exercises

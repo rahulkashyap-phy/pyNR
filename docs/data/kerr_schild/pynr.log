@@ -1,0 +1,42 @@
+pyNR simulation 'kerr_schild': 14 thorns active
+  UniformGrid(shape=(72, 72, 72), xmin=[-8.125, -8.125, -8.125], xmax=[8.125, 8.125, 8.125], dx=[0.25, 0.25, 0.25], nghost=3), dt = 0.0625, backend = numba
+Schedule:
+  INITIAL:
+      ADMBase::initial_flat
+      Exact::initial_data
+  POSTINITIAL:
+      ADMEvolve::sanitize_excision
+      MoL::post_initial
+  EVOL:
+      MoL::step
+  POSTSTEP:
+      MoL::check_nan
+  OUTPUT:
+      IOHDF5::output
+      IOScalar::output
+      IOBasic::output
+INFO (Exact): initial data from 'Kerr/Kerr-Schild'
+     it |         t |      gxx min          max |        H min          max
+---------------------------------------------------------------------------
+      0 |    0.0000 |  1.00000e+00  4.52435e+00 | -2.11090e-02  2.72902e-02
+     40 |    2.5000 |  9.98979e-01  4.52435e+00 | -4.70176e-02  8.30680e-02
+     80 |    5.0000 |  9.97987e-01  4.52435e+00 | -4.89609e-02  7.01378e-02
+    120 |    7.5000 |  9.95323e-01  4.52435e+00 | -9.55958e-02  7.55245e-02
+    160 |   10.0000 |  9.94407e-01  4.52435e+00 | -1.60748e-01  1.39576e-01
+    200 |   12.5000 |  9.90214e-01  4.52435e+00 | -4.88921e-01  4.56023e-01
+    240 |   15.0000 |  9.81320e-01  4.52435e+00 | -7.70793e-01  1.09346e+00
+    280 |   17.5000 |  9.40599e-01  4.52435e+00 | -1.70151e+00  1.88668e+00
+    320 |   20.0000 |  8.88894e-01  4.52435e+00 | -4.73406e+00  3.47990e+00
+    360 |   22.5000 |  8.39912e-01  4.52435e+00 | -1.41165e+01  8.01031e+00
+ABORT: blow-up (NaN/Inf or |u| > 1e+10) in variables [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] of ADMEvolve at iteration 390, t = 24.375
+Done: iteration 390, t = 24.375, wall time 66.76 s
+  STARTUP          0.000 s
+  BASEGRID         0.000 s
+  INITIAL          0.194 s
+  POSTINITIAL      0.002 s
+  ANALYSIS         0.000 s
+  OUTPUT           7.744 s
+  PRESTEP          0.001 s
+  EVOL            58.738 s
+  POSTSTEP         0.080 s
+  TERMINATE        0.000 s

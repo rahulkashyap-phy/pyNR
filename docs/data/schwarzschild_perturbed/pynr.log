@@ -1,0 +1,50 @@
+pyNR simulation 'schwarzschild_perturbed': 17 thorns active
+  UniformGrid(shape=(136, 136, 136), xmin=[-16.125, -16.125, -16.125], xmax=[16.125, 16.125, 16.125], dx=[0.25, 0.25, 0.25], nghost=3), dt = 0.0625, backend = numba
+Schedule:
+  INITIAL:
+      ADMBase::initial_flat
+      Exact::initial_data
+      Perturb::perturb
+  POSTINITIAL:
+      ADMEvolve::sanitize_excision
+      MoL::post_initial
+  EVOL:
+      MoL::step
+  POSTSTEP:
+      MoL::check_nan
+  ANALYSIS:
+      Multipole::analyse
+  OUTPUT:
+      IOHDF5::output
+      IOScalar::output
+      IOBasic::output
+INFO (Exact): initial data from 'Kerr/Kerr-Schild'
+INFO (Perturb): added l=2 m=0 perturbation, max |eps| = 6.197e-04
+     it |         t |      alp min          max |        H min          max
+---------------------------------------------------------------------------
+      0 |    0.0000 |  3.12537e-01  9.66010e-01 | -6.30231e-03  7.07808e-03
+     40 |    2.5000 |  3.12537e-01  9.66010e-01 | -2.10633e-02  1.72884e-02
+     80 |    5.0000 |  3.12537e-01  9.66010e-01 | -4.43316e-02  4.13423e-02
+    120 |    7.5000 |  3.12537e-01  9.66010e-01 | -2.82637e-02  3.32733e-02
+    160 |   10.0000 |  3.12537e-01  9.66010e-01 | -3.24305e-02  3.58550e-02
+    200 |   12.5000 |  3.12537e-01  9.66010e-01 | -6.98803e-02  4.53108e-02
+    240 |   15.0000 |  3.12537e-01  9.66010e-01 | -7.00544e-02  7.48098e-02
+    280 |   17.5000 |  3.12537e-01  9.66010e-01 | -6.99607e-02  1.11876e-01
+    320 |   20.0000 |  3.12537e-01  9.66010e-01 | -1.37506e-01  1.30410e-01
+    360 |   22.5000 |  3.12537e-01  9.66010e-01 | -2.47721e-01  2.08481e-01
+    400 |   25.0000 |  3.12537e-01  9.66010e-01 | -3.48240e-01  3.40176e-01
+    440 |   27.5000 |  3.12537e-01  9.66010e-01 | -4.84534e-01  4.89036e-01
+    480 |   30.0000 |  3.12537e-01  9.66010e-01 | -1.13174e+00  7.39944e-01
+    520 |   32.5000 |  3.12537e-01  9.66010e-01 | -1.69656e+00  1.18213e+00
+    560 |   35.0000 |  3.12537e-01  9.66010e-01 | -2.87605e+00  2.30645e+00
+Done: iteration 576, t = 36, wall time 702.05 s
+  STARTUP          0.000 s
+  BASEGRID         0.000 s
+  INITIAL          1.700 s
+  POSTINITIAL      0.024 s
+  ANALYSIS        37.194 s
+  OUTPUT          29.269 s
+  PRESTEP          0.001 s
+  EVOL           633.077 s
+  POSTSTEP         0.777 s
+  TERMINATE        0.000 s

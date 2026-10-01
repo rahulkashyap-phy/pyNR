@@ -4,7 +4,8 @@
 
 ## Physics
 
-The Kerr metric in Kerr-Schild form, $g_{\mu\nu} = \eta_{\mu\nu} + 2H l_\mu l_\nu$,
+The Kerr metric in Kerr-Schild form, $g_{\mu\nu} = \eta_{\mu\nu} + 2H l_\mu l_\nu$
+(Eq. {eq}`eq-kerr-schild`),
 with mass $M = 1$ and spin $\chi = a/M = 0.6$ (horizon at $r_+ = M(1+\sqrt{1-\chi^2}) = 1.8M$) (see the `Exact` thorn for all
 formulae). These coordinates cross the horizon smoothly, so the interior
 can be *excised*. With the exact lapse and shift the data are stationary:
@@ -18,8 +19,11 @@ $\partial_t\gamma_{ij} = \partial_t K_{ij} = 0$ in the continuum.
   `test_constraints_vanish_for_kerr`).
 - During the evolution $\|H\|_2$ is roughly constant at first. Then the
   plain ADM system's constraint-violating mode, seeded near the excision
-  boundary, grows and the run fails. For Schwarzschild ($\chi = 0$) we
-  measured:
+  boundary, grows and the run fails. For Schwarzschild ($\chi = 0$),
+  {numref}`tab-ks-lifetime` shows the measured failure times:
+
+  ```{table} Failure time of Schwarzschild (Kerr-Schild, static gauge) runs versus resolution, excision radius and dissipation.
+  :name: tab-ks-lifetime
 
   | $\Delta x$ | excision radius | $\epsilon$ (KO) | fails at |
   |---|---|---|---|
@@ -28,15 +32,21 @@ $\partial_t\gamma_{ij} = \partial_t K_{ij} = 0$ in the continuum.
   | 0.5 | 1.8 M | 0.3 | $t \approx 19M$ |
   | 0.25 | 1.6 M | 0.2 | $t \approx 29M$ |
   | 0.25 | 1.8 M | 0.3 | stable to $t \ge 40M$ |
+  ```
 
-  For the spinning case as shipped ($\chi = 0.6$, $\Delta x = 0.25$, excision $1.6M \approx 0.9\,r_+$,
-  $\epsilon = 0.3$) we measured: $\max|H| \approx 0.03$ at $t = 0$ and $\approx 0.1$ at $t = 10M$, then
-  exponential growth. The run aborts at $t \approx 23M$ (95 s on 12 cores).
+  {numref}`fig-kerr-constraints` shows the spinning case as shipped
+  ($\chi = 0.6$, excision radius $\approx 0.9\,r_+$; full settings in
+  {numref}`tab-settings-kerr-constraints`). $\max|H|$ starts at the
+  truncation-error level, stays roughly flat for about $10M$, then grows
+  exponentially until the run aborts at $t \approx 24M$.
 
   Resolving the region between the excision boundary and the horizon
   matters, and so does dissipation. The lifetime does not grow without
   bound with resolution, because the instability is a property of the
   continuum ADM system.
+
+```{include} ../figures/kerr_constraints.md
+```
 
 ## Exercises
 

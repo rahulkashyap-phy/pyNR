@@ -1,20 +1,25 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 r"""Explicit Runge-Kutta time integrators for the method of lines (MoL).
 
 After spatial discretisation the PDEs become a large ODE system
-:math:`\partial_t \mathbf u = \mathbf F(t, \mathbf u)`. We integrate it with
+$\partial_t \mathbf u = \mathbf F(t, \mathbf u)$. We integrate it with
 explicit Runge-Kutta methods written as in-place array updates, so memory
 traffic is a few passes over the state per stage — no Python loop over
 grid points.
 
-======== ===== ============================================================
-method   order notes
-======== ===== ============================================================
-Euler    1     unstable for centred differences — for demonstrations only
-RK2      2     Heun / midpoint
-ICN      2     iterated Crank-Nicolson (2 iterations), classic in NR
-RK3      3     strong-stability-preserving (Shu-Osher)
-RK4      4     classic; default, as in most ET BSSN runs
-======== ===== ============================================================
+.. table:: Time integrators selected by ``MoL::ODE_Method``.
+   :name: tab-integrators
+
+   ======== ===== ============================================================
+   method   order notes
+   ======== ===== ============================================================
+   Euler    1     unstable for centred differences — for demonstrations only
+   RK2      2     Heun / midpoint
+   ICN      2     iterated Crank-Nicolson (2 iterations), classic in NR
+   RK3      3     strong-stability-preserving (Shu-Osher)
+   RK4      4     classic; default, as in most ET BSSN runs
+   ======== ===== ============================================================
 
 ``rhs(t, U, dU)`` must fill ``dU``; ``post(U)`` applies state boundary
 conditions (periodic sync etc.) after every stage.
@@ -22,8 +27,8 @@ conditions (periodic sync etc.) after every stage.
 Why not :func:`scipy.integrate.solve_ivp`? It is excellent for small ODE
 systems (we use it e.g. for geodesics and TOV-type problems), but it flattens
 and copies the state and adapts the step globally, which is wasteful for
-:math:`10^7`-variable hyperbolic PDEs where the CFL condition fixes
-:math:`\Delta t` anyway.
+$10^7$-variable hyperbolic PDEs where the CFL condition fixes
+$\Delta t$ anyway.
 """
 
 from __future__ import annotations

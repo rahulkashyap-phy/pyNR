@@ -9,6 +9,8 @@
 
 pyNR is a teaching and prototyping code for 3+1 numerical relativity.
 
+**Author:** Rahul Kashyap, Indian Institute of Technology Bombay · <rahulkashyap@iitb.ac.in>
+
 - **Same structure as the ET.** Thorns (`ADMBase`, `Exact`, `ADMEvolve`, `MoL`,
   `Dissipation`, `WeylScal4`, `Multipole`, `IOHDF5`, ...), schedule bins, and
   `.par` parameter files with the ET syntax. You can replace a component
@@ -26,6 +28,7 @@ pyNR is a teaching and prototyping code for 3+1 numerical relativity.
 ## Quick start
 
 ```bash
+python3 -m venv .venv && source .venv/bin/activate    # or a conda env, see docs/installation.md
 pip install -e ".[viz]"
 pynr run par/gauge_wave.par                  # AwA gauge wave, ~10 s
 pynr run par/schwarzschild_perturbed.par     # ring a black hole, extract Psi4
@@ -81,6 +84,33 @@ Every folder has its own README with commands to use that part on its own.
 | `docs/` | Sphinx + MyST site, including the [development log](docs/devlog/index.md) | [README](docs/README.md) |
 | `scripts/` | benchmark, TiddlyWiki importer | [README](scripts/README.md) |
 
-## License
+## License, attribution and citation
 
-MIT. See [LICENSE](LICENSE).
+pyNR is licensed under the **Apache License 2.0** ([LICENSE](LICENSE)).
+Copyright 2026 Rahul Kashyap, Indian Institute of Technology Bombay.
+
+- **Attribution is required.** Any redistribution of pyNR, or of work derived
+  from it, in source or binary form and for any purpose, academic or
+  commercial, must include the [NOTICE](NOTICE) file, which names the author
+  and affiliation (Apache-2.0 §4(d)). Each source file carries a copyright and
+  SPDX header, which must be kept.
+- **Please cite pyNR** in any publication, thesis, course material or product
+  that uses it or builds on it. Use [CITATION.cff](CITATION.cff), or GitHub's
+  "Cite this repository" button:
+
+  > R. Kashyap, *pyNR: numerical relativity in Python, organised like the
+  > Einstein Toolkit*, Indian Institute of Technology Bombay (2026),
+  > https://github.com/rahulkashyap-phy/pyNR
+
+  ```bibtex
+  @software{kashyap_pynr_2026,
+    author      = {Kashyap, Rahul},
+    title       = {{pyNR}: numerical relativity in Python, organised like the Einstein Toolkit},
+    institution = {Indian Institute of Technology Bombay},
+    year        = {2026},
+    url         = {https://github.com/rahulkashyap-phy/pyNR},
+    license     = {Apache-2.0}
+  }
+  ```
+
+Contact: Rahul Kashyap, <rahulkashyap@iitb.ac.in>.

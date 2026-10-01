@@ -1,9 +1,12 @@
-r"""WeylScal4: the Newman-Penrose scalar :math:`\Psi_4` on the grid.
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
+r"""WeylScal4: the Newman-Penrose scalar $\Psi_4$ on the grid.
 
-Far from the source, :math:`\Psi_4` carries the outgoing radiation,
+Far from the source, $\Psi_4$ carries the outgoing radiation,
 
-.. math::
+$$
     \Psi_4 = \ddot h_+ - i\,\ddot h_\times \quad (r\to\infty),
+$$ (eq-psi4-strain)
 
 so the strain follows by integrating twice in time (kuibit does this with
 fixed-frequency integration, Reisswig & Pollney 2011). Formulae and tetrad:

@@ -17,11 +17,15 @@
 
 ## Measured (Apple M-series laptop, 12 threads, Python 3.14, Numba 0.67)
 
+```{table} Measured kernel timings.
+:name: tab-performance
+
 | kernel | grid | time | per point |
 |---|---|---|---|
 | ADM RHS, 1 thread | $64^3$ | 131 ms | 670 ns |
 | ADM RHS, 12 threads | $96^3$ | 78 ms | 107 ns (≈1.3 µs·thread) |
 | KO dissipation, 16 vars, 12 threads | $96^3$ | 8.5 ms | 0.7 ns / var |
+```
 
 Reproduce with `python scripts/benchmark.py 96`.
 

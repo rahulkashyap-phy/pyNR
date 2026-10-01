@@ -1,12 +1,15 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 r"""ADMConstraints: Hamiltonian and momentum constraints.
 
-.. math::
+$$
     H \equiv R + K^2 - K_{ij}K^{ij} = 16\pi\rho = 0,\qquad
     M_i \equiv D_j K^j{}_i - D_i K = 8\pi S_i = 0 .
+$$ (eq-constraints)
 
 The evolution equations preserve the constraints only in the continuum; on
 the grid they converge to zero at the order of the scheme (4th here). A
-convergence test on :math:`\|H\|_2` is the single most useful check of an NR
+convergence test on $\|H\|_2$ is the single most useful check of an NR
 code. Grid functions ``H``, ``M1``, ``M2``, ``M3`` are computed on demand
 (only when output asks for them). Inside an excision region
 (``ADMEvolve::excision_radius``) they are set to zero so that norms measure

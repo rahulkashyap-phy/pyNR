@@ -3,6 +3,9 @@
 Each numerical task in pyNR is done by one well-tested, popular library,
 behind a small pyNR function so it can be swapped.
 
+```{table} Numerical tasks and the libraries used for them.
+:name: tab-utilities
+
 | task | used now | alternatives worth knowing |
 |---|---|---|
 | array storage and algebra | **NumPy** | CuPy (NVIDIA GPU), JAX (GPU/TPU, autodiff) |
@@ -19,6 +22,7 @@ behind a small pyNR function so it can be swapped.
 | I/O | **h5py** (Carpet HDF5 layout) | openPMD-api, ADIOS2 |
 | analysis & plots | **kuibit**, matplotlib | yt, VisIt, ParaView (read the HDF5 directly) |
 | parallelism | Numba threads (one node) | `mpi4py` domain decomposition (planned) |
+```
 
 ## Rules of thumb for fast Python
 

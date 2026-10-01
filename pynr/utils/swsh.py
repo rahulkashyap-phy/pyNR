@@ -1,23 +1,28 @@
-r"""Spin-weighted spherical harmonics :math:`{}_sY_{\ell m}(\theta,\phi)`.
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
+r"""Spin-weighted spherical harmonics ${}_sY_{\ell m}(\theta,\phi)$.
 
 Gravitational radiation is decomposed as
 
-.. math::
+$$
     \Psi_4(t, r, \theta, \phi) = \sum_{\ell\ge2}\sum_{m=-\ell}^{\ell}
         \Psi_4^{\ell m}(t, r)\; {}_{-2}Y_{\ell m}(\theta,\phi),
     \qquad
     \Psi_4^{\ell m} = \oint \Psi_4\, {}_{-2}\bar Y_{\ell m}\, d\Omega .
+$$ (eq-swsh-decomposition)
 
 We use Goldberg et al. (1967) with the phase convention of the Einstein
 Toolkit's ``Multipole`` thorn, for which
-:math:`{}_{-2}Y_{22} = \sqrt{5/64\pi}\,(1+\cos\theta)^2 e^{2i\phi}`:
+${}_{-2}Y_{22} = \sqrt{5/64\pi}\,(1+\cos\theta)^2 e^{2i\phi}$:
 
-.. math::
+$$
     {}_sY_{\ell m} = (-1)^{s}\sqrt{\frac{2\ell+1}{4\pi}
         \frac{(\ell+m)!(\ell-m)!}{(\ell+s)!(\ell-s)!}}
         \sum_r \binom{\ell-s}{r}\binom{\ell+s}{r+s-m}(-1)^{\ell-r-s+m}\,
         \sin^{2\ell-k}(\theta/2)\cos^{k}(\theta/2)\, e^{im\phi},
     \quad k = 2r + s - m .
+$$ (eq-swsh-goldberg)
+
 """
 
 from __future__ import annotations

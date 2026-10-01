@@ -6,6 +6,9 @@ here carries over directly.
 
 ## Flesh and thorns
 
+```{table} Cactus/ET concepts, their pyNR counterparts and where they live.
+:name: tab-framework-mapping
+
 | Cactus / ET | pyNR | where |
 |---|---|---|
 | flesh | `Simulation`, `Schedule`, `Parameters`, `GridFunctions` | `pynr/cactus/` |
@@ -17,6 +20,7 @@ here carries over directly.
 | PUGH / Carpet | `UniformGrid` (uniform, single node) | `pynr/cactus/grid.py` |
 | MoL | `MoL` thorn + `pynr.utils.integrators` | |
 | `.par` files | same syntax, incl. `ActiveThorns`, `Thorn::p[i]`, `$parfile` | |
+```
 
 ### Lifecycle
 
@@ -67,6 +71,9 @@ If the loop matters for performance, move it into a Numba kernel in
 Components talk only through grid functions, parameters and a few services,
 so each one can be replaced on its own:
 
+```{table} How to replace each component.
+:name: tab-framework-swap
+
 | what | how to swap |
 |---|---|
 | initial data | a new thorn that fills `ADMBase` in `INITIAL` (e.g. a future `TwoPunctures`) |
@@ -75,3 +82,4 @@ so each one can be replaced on its own:
 | kernel implementation | `Driver::backend` (`numba`, `numpy`), register more in `pynr.backends` |
 | interpolation, quadrature | functions in `pynr.utils` (e.g. SciPy's `RegularGridInterpolator`) |
 | output format | an I/O thorn (HDF5 Carpet format today; openPMD/ADIOS2 possible) |
+```

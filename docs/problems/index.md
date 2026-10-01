@@ -8,6 +8,9 @@ pynr run par/<problem>.par [--set Thorn::param=value ...]
 
 The output goes to `./<problem>/`. Analyse it with kuibit (see [Visualisation](../visualization.md)).
 
+```{table} The problem set.
+:name: tab-problems
+
 | # | problem | physics | cost |
 |---|---|---|---|
 | 1 | [Gauge wave](gauge_wave.md) | gauge dynamics in flat space; convergence | seconds |
@@ -16,6 +19,7 @@ The output goes to `./<problem>/`. Analyse it with kuibit (see [Visualisation](.
 | 4 | [1+log slicing of a puncture](schwarzschild_1plog.md) | lapse collapse, slice stretching | minutes |
 | 5 | [Kerr black hole in Kerr-Schild coordinates](kerr_schild.md) | stationarity, excision, constraint growth | minutes |
 | 6 | [Perturbed black hole and GW extraction](perturbed_bh.md) | quasi-normal ringing, $\Psi_4$ multipoles | ~30 min |
+```
 
 ```{toctree}
 :hidden:

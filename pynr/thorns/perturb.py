@@ -1,27 +1,30 @@
-r"""Perturb: add a Gaussian :math:`(\ell, m)` shell perturbation to the metric.
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
+r"""Perturb: add a Gaussian $(\ell, m)$ shell perturbation to the metric.
 
 After the background initial data are set, the spatial metric is rescaled
 
-.. math::
+$$
     \gamma_{ij} \to \left(1 + \epsilon(r,\theta,\phi)\right)\gamma_{ij},\qquad
     \epsilon = A\, e^{-(r-r_0)^2/\sigma^2}\, Y_{\ell m}(\theta,\phi),
+$$ (eq-perturbation)
 
-with a real spherical harmonic :math:`Y_{\ell m}` (``m >= 0`` uses
-:math:`\mathrm{Re}\,Y_{\ell m}`, ``m < 0`` uses :math:`\mathrm{Im}\,Y_{\ell |m|}`),
-centred on ``Perturb::center_*``. :math:`K_{ij}` is left unchanged.
+with a real spherical harmonic $Y_{\ell m}$ (``m >= 0`` uses
+$\mathrm{Re}\,Y_{\ell m}$, ``m < 0`` uses $\mathrm{Im}\,Y_{\ell |m|}$),
+centred on ``Perturb::center_*``. $K_{ij}$ is left unchanged.
 
 .. warning::
    This perturbation does **not** solve the Hamiltonian constraint; it
-   violates it at :math:`\mathcal{O}(A)`. It is a quick way to "ring" a black
+   violates it at $\mathcal{O}(A)$. It is a quick way to "ring" a black
    hole: the gauge/constraint-violating part propagates away or stays near the
    shell, while the physical part excites quasi-normal modes. Monitor
-   ``ADMConstraints::H`` and keep :math:`A \lesssim 10^{-3}`. Solving the
+   ``ADMConstraints::H`` and keep $A \lesssim 10^{-3}$. Solving the
    constraint for the perturbed data (Brill waves / conformal thin sandwich)
    is a good project once the elliptic solver lands.
 
-Physics check: for :math:`M = 1`, :math:`\ell = 2` the dominant Schwarzschild
-quasi-normal mode is :math:`M\omega = 0.3737 - 0.0890\,i`
-(period :math:`\approx 16.8M`, e-folding time :math:`\approx 11.2M`).
+Physics check: for $M = 1$, $\ell = 2$ the dominant Schwarzschild
+quasi-normal mode is $M\omega = 0.3737 - 0.0890\,i$
+(period $\approx 16.8M$, e-folding time $\approx 11.2M$).
 """
 
 import numpy as np

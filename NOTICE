@@ -1,0 +1,20 @@
+pyNR — numerical relativity in Python, organised like the Einstein Toolkit
+Copyright 2026 Rahul Kashyap
+Indian Institute of Technology Bombay
+Contact: rahulkashyap@iitb.ac.in
+https://github.com/rahulkashyap-phy/pyNR
+
+This product includes software developed by Rahul Kashyap (Indian Institute
+of Technology Bombay), licensed under the Apache License, Version 2.0.
+
+Attribution (Apache-2.0, Section 4(d)): any redistribution of pyNR, in source
+or binary form, and any Derivative Work built on it, must include a readable
+copy of this NOTICE file, including the author's name and affiliation above.
+
+Citation: if you use pyNR or work derived from it in research, teaching
+material, software or any other product, academic or otherwise, please cite
+it as given in CITATION.cff:
+
+  R. Kashyap, "pyNR: numerical relativity in Python, organised like the
+  Einstein Toolkit", Indian Institute of Technology Bombay (2026),
+  https://github.com/rahulkashyap-phy/pyNR

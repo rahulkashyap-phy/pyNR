@@ -4,12 +4,16 @@ pyNR writes the same files as the Einstein Toolkit's Carpet I/O. Every kuibit
 tool, including `SimDir` and the `kuibit` plotting scripts, works on a pyNR
 output directory unchanged.
 
+```{table} pyNR output files, their ET equivalents and how kuibit reads them.
+:name: tab-kuibit-files
+
 | pyNR output | ET equivalent | kuibit access |
 |---|---|---|
 | `alp.xyz.h5`, `alp.xy.h5`, ... | CarpetIOHDF5 | `sd.gf.xyz["alp"]`, `sd.gf.xy["alp"]` |
 | `alp.maximum.asc`, `.minimum`, `.norm2` | CarpetIOScalar | `sd.ts.maximum["alp"]` |
 | `mp_Psi4_l2_m2_r20.00.asc` | Multipole | `sd.gws[20.0][(2, 2)]`, `sd.multipoles["Psi4"]` |
 | `parameters.par` | the `.par` in the output | — |
+```
 
 ```python
 from kuibit.simdir import SimDir

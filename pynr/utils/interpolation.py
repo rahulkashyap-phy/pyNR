@@ -1,15 +1,18 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 r"""Lagrange interpolation from a uniform grid to arbitrary points.
 
 This is what the ET's ``AEILocalInterp`` does for the ``Multipole`` thorn.
 Along each axis we use the ``order+1`` grid points around the target and
 Lagrange basis polynomials
 
-.. math::
+$$
     \ell_m(\xi) = \prod_{n\ne m}\frac{\xi - \xi_n}{\xi_m - \xi_n},
+$$ (eq-lagrange)
 
 and the 3D weight is the tensor product
-:math:`w_{abc} = \ell_a(\xi)\ell_b(\eta)\ell_c(\zeta)`. The error is
-:math:`\mathcal{O}(h^{\mathrm{order}+1})`. Several fields are interpolated in
+$w_{abc} = \ell_a(\xi)\ell_b(\eta)\ell_c(\zeta)$. The error is
+$\mathcal{O}(h^{\mathrm{order}+1})$. Several fields are interpolated in
 one pass since the weights are shared.
 
 Alternatives: :func:`scipy.interpolate.RegularGridInterpolator` (linear or

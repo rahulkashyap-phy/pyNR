@@ -6,13 +6,13 @@
 
 The time-symmetric Schwarzschild slice in isotropic coordinates,
 
-$$ \gamma_{ij} = \psi^4\delta_{ij},\quad \psi = 1 + \frac{M}{2r},\quad K_{ij} = 0, $$
+$$ \gamma_{ij} = \psi^4\delta_{ij},\quad \psi = 1 + \frac{M}{2r},\quad K_{ij} = 0, $$ (eq-isotropic-slice)
 
 is evolved with $\alpha = 1$ and $\beta^i = 0$ (*geodesic slicing*). The
 coordinate observers are then freely falling. The observer at the throat
 $r = M/2$ (areal radius $R = 2M$) starts at rest. On the cycloid
 
-$$ R = M(1+\cos\eta),\qquad \tau = M(\eta + \sin\eta) $$
+$$ R = M(1+\cos\eta),\qquad \tau = M(\eta + \sin\eta) $$ (eq-geodesic-cycloid)
 
 it reaches the singularity at $\tau = \pi M$, so a *perfect* code would
 crash at $t = \pi M$. A 1D spherical code with a well-resolved throat shows
@@ -23,11 +23,15 @@ this (Alcubierre, *Introduction to 3+1 Numerical Relativity*, §4.2).
 The 3D run fails much earlier, at **$t \lesssim 0.7M$, and refining the grid
 makes it worse**:
 
-| $\Delta x$ | $\max|K_{xx}| > 10^6$ at |
+```{table} Blow-up time of the geodesic-slicing run versus resolution.
+:name: tab-geodesic-crash
+
+| $\Delta x$ | $\max\lvert K_{xx}\rvert > 10^6$ at |
 |---|---|
 | 0.2 | $t = 0.70M$ |
 | 0.1 | $t = 0.70M$ |
 | 0.05 | $t = 0.30M$ |
+```
 
 The failure starts at the grid point nearest the puncture $r = 0$ (for
 $\Delta x = 0.2$: $r = 0.33M$, where $\gamma_{xx} \approx 40$). Close to

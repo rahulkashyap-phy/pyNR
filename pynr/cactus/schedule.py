@@ -1,3 +1,5 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 """Schedule bins (the ``schedule.ccl`` analogue).
 
 The main loop visits bins in this order (``CCTK_`` prefixes are accepted)::

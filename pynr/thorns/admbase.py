@@ -1,13 +1,16 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 r"""ADMBase: the 3+1 variables every other thorn agrees on.
 
 The line element in 3+1 form is
 
-.. math::
+$$
     ds^2 = -\alpha^2 dt^2 + \gamma_{ij}(dx^i + \beta^i dt)(dx^j + \beta^j dt),
+$$ (eq-line-element)
 
-with lapse :math:`\alpha`, shift :math:`\beta^i`, spatial metric
-:math:`\gamma_{ij}` and extrinsic curvature
-:math:`K_{ij} = -\frac{1}{2\alpha}(\partial_t\gamma_{ij} - \mathcal{L}_\beta\gamma_{ij})`.
+with lapse $\alpha$, shift $\beta^i$, spatial metric
+$\gamma_{ij}$ and extrinsic curvature
+$K_{ij} = -\frac{1}{2\alpha}(\partial_t\gamma_{ij} - \mathcal{L}_\beta\gamma_{ij})$.
 
 Like the ET's ADMBase, this thorn only *owns* the variables and the
 parameters that select who sets them; it contains no physics. Initial data

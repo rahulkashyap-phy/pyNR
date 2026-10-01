@@ -1,3 +1,5 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 """Command line interface.
 
 ::
@@ -46,12 +48,14 @@ def cmd_thorns(args):
             if cls.requires:
                 print(f"Requires: {', '.join(cls.requires)}\n")
             if cls.parameters:
+                print(f"```{{table}} Parameters of the {cls.name} thorn.\n"
+                      f":name: tab-params-{cls.name.lower()}\n")
                 print("| parameter | default | description |\n|---|---|---|")
                 for n, p in cls.parameters.items():
                     d = f"{p.default!r}" + (f" (array, size {p.size})" if p.size else "")
                     kw = f" One of: {', '.join(f'`{k}`' for k in p.keywords)}." if p.keywords else ""
                     print(f"| `{cls.name}::{n}` | `{d}` | {p.doc}.{kw} |")
-                print()
+                print("```\n")
         else:
             print(f"{cls.name:16s} {summary}")
 

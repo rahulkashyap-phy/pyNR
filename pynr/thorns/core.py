@@ -1,3 +1,5 @@
+# Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay)
+# SPDX-License-Identifier: Apache-2.0 -- see LICENSE and NOTICE (attribution required)
 """Core thorns that are always active: Cactus, CoordBase, Driver, Time, IO."""
 
 from pynr.cactus import Param, Thorn, register_thorn
