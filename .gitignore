@@ -48,3 +48,6 @@ docs/figures/
 
 # Simulation output written by the notebooks
 notebooks/*/
+
+# Simulation output (default output root of a checkout, see pynr/paths.py)
+/simulations/

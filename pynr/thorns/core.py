@@ -51,5 +51,7 @@ class Time(Thorn):
 class IO(Thorn):
     name = "IO"
     parameters = {
-        "out_dir": Param("", "Output directory (default: parameter-file name)"),
+        "out_dir": Param("", "Output directory (default: parameter-file name). Relative paths "
+                                 "are placed under the output root: $PYNR_OUTPUT_DIR, or "
+                                 "<checkout>/simulations inside a pyNR checkout (see pynr.paths)"),
     }

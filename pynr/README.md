@@ -8,13 +8,14 @@
 | [`utils/`](utils/) | generic numerical methods | [utils/README.md](utils/README.md) |
 | `backends.py` | picks kernel implementation (`Driver::backend`) | — |
 | `__main__.py` | CLI: `pynr run`, `pynr thorns` | — |
+| `paths.py` | output root shared by the CLI and notebooks (`run_dir`, `list_runs`) | — |
 
 ## Install and check
 
 ```bash
 pip install -e ".[viz,test]"      # from the repository root
 python -m pynr thorns             # lists thorns -> package imports fine
-python -m pynr run par/gauge_wave.par
+python -m pynr run par/gauge_wave.par   # -> simulations/gauge_wave (see paths.py)
 ```
 
 ## Use from Python

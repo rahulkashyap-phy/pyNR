@@ -31,4 +31,5 @@ def kerr_state():
 @pytest.fixture
 def tmp_outdir(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("PYNR_OUTPUT_DIR", str(tmp_path))  # relative out_dirs land in tmp_path
     return tmp_path

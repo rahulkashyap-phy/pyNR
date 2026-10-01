@@ -290,18 +290,22 @@ def save_gauge_wave():
     """Run the gauge wave at four settings; store alpha(x), alpha_exact(x) and metadata."""
     from pynr import Simulation
 
-    cwd = os.getcwd()
-    os.chdir(ROOT)  # relative out_dir: no local absolute paths in the stored parameters.par
+    # relative out_dir resolved against ROOT: no local absolute paths in parameters.par
+    old_root = os.environ.get("PYNR_OUTPUT_DIR")
+    os.environ["PYNR_OUTPUT_DIR"] = ROOT
     try:
         _save_gauge_wave_runs(Simulation)
     finally:
-        os.chdir(cwd)
+        if old_root is None:
+            del os.environ["PYNR_OUTPUT_DIR"]
+        else:
+            os.environ["PYNR_OUTPUT_DIR"] = old_root
 
 
 def _save_gauge_wave_runs(Simulation):
     for tag, (dx, t_final) in GW_RUNS.items():
         out = os.path.join("docs", "data", "gauge_wave", tag)
-        shutil.rmtree(out, ignore_errors=True)
+        shutil.rmtree(os.path.join(ROOT, out), ignore_errors=True)
         over = {"CoordBase::dx": dx, "CoordBase::dy": dx, "CoordBase::dz": dx,
                 "CoordBase::ymin": -dx, "CoordBase::ymax": dx,
                 "CoordBase::zmin": -dx, "CoordBase::zmax": dx,
@@ -314,7 +318,7 @@ def _save_gauge_wave_runs(Simulation):
         g = sim.grid.nghost
         prof = np.column_stack([sim.grid.coords1d[0][g:-g], sim.thorn("ADMBase").U[12][g:-g, g, g],
                                 ae[g:-g, g, g]])
-        np.savetxt(os.path.join(out, "alp_profile.dat"), prof,
+        np.savetxt(os.path.join(sim.out_dir, "alp_profile.dat"), prof,
                    header=f"gauge wave, dx = {dx}, t = {sim.time:g}\n1:x 2:alpha 3:alpha_exact")
         print("saved", out)
 

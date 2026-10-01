@@ -77,10 +77,15 @@ python -m ipykernel install --user --name pynr --display-name "Python (pyNR .ven
 ## Running
 
 ```bash
-pynr run par/gauge_wave.par                               # output goes to ./gauge_wave/
+pynr run par/gauge_wave.par                               # output: <repo>/simulations/gauge_wave/
 pynr run par/gauge_wave.par --set CoordBase::dx=0.01      # override a parameter
 pynr run par/kerr_schild.par --backend numpy              # use the NumPy reference kernels
 ```
+
+Relative output directories go under one *output root*: `$PYNR_OUTPUT_DIR` if
+set, otherwise `<checkout>/simulations` inside a pyNR checkout, otherwise the
+current directory. The terminal and the notebooks therefore share runs; see
+{ref}`sec-output-location`. Use `--output-root DIR` to choose another root.
 
 From Python or a notebook:
 

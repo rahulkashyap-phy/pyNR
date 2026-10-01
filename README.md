@@ -30,7 +30,7 @@ pyNR is a teaching and prototyping code for 3+1 numerical relativity.
 ```bash
 python3 -m venv .venv && source .venv/bin/activate    # or a conda env, see docs/installation.md
 pip install -e ".[viz]"
-pynr run par/gauge_wave.par                  # AwA gauge wave, ~10 s
+pynr run par/gauge_wave.par                  # AwA gauge wave, ~10 s -> simulations/gauge_wave/
 pynr run par/schwarzschild_perturbed.par     # ring a black hole, extract Psi4
 pytest                                       # convergence & compatibility tests
 ```
@@ -40,7 +40,7 @@ from pynr import Simulation
 from kuibit.simdir import SimDir
 
 Simulation.from_parfile("par/gauge_wave.par").run()
-sd = SimDir("gauge_wave")
+sd = SimDir("simulations/gauge_wave")      # or pynr.paths.run_dir("gauge_wave")
 sd.ts.maximum["alp"].y
 ```
 

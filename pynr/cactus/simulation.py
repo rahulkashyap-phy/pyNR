@@ -24,6 +24,7 @@ from pynr.cactus.params import Parameters
 from pynr.cactus.parfile import parse_parfile, parse_parfile_text
 from pynr.cactus.schedule import Schedule
 from pynr.cactus.thorn import THORNS, Thorn
+from pynr.paths import resolve_out_dir
 
 CORE_THORNS = ("Cactus", "CoordBase", "Driver", "Time", "IO")
 
@@ -32,7 +33,7 @@ class Simulation:
     """A configured simulation. Build one with :meth:`from_parfile`."""
 
     def __init__(self, entries: dict, name: str = "simulation", parfile_text: str | None = None,
-                 verbose: bool = True):
+                 verbose: bool = True, parfile_path: str | None = None):
         import pynr.thorns  # noqa: F401  (registers all thorns)
 
         self.name = name
@@ -66,7 +67,8 @@ class Simulation:
         self.dt = tm.timestep if tm.timestep_method == "given" else tm.dtfac * float(self.grid.dx.min())
         self.backend = drv.backend
 
-        self.out_dir = self.params.get("IO", "out_dir") or name
+        # relative out_dir -> <output root>/<out_dir>, see pynr.paths
+        self.out_dir = resolve_out_dir(self.params.get("IO", "out_dir") or name, parfile_path)
         os.makedirs(self.out_dir, exist_ok=True)
         self._logfile = open(os.path.join(self.out_dir, "pynr.log"), "w")
         if parfile_text is not None:
@@ -83,6 +85,7 @@ class Simulation:
 
         self.log(f"pyNR simulation '{name}': {len(self.thorns)} thorns active")
         self.log(f"  {self.grid}, dt = {self.dt:g}, backend = {self.backend}")
+        self.log(f"  output: {self.out_dir}")
         self.log("Schedule:\n" + self.schedule.describe())
 
     # ------------------------------------------------------------------ #
@@ -99,7 +102,7 @@ class Simulation:
         name = os.path.splitext(os.path.basename(str(path)))[0]
         with open(path) as fh:
             text = fh.read()
-        return cls(entries, name=name, parfile_text=text, **kw)
+        return cls(entries, name=name, parfile_text=text, parfile_path=str(path), **kw)
 
     @classmethod
     def from_string(cls, text: str, name: str = "simulation", overrides: dict | None = None, **kw):

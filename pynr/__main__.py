@@ -6,6 +6,7 @@
 
     pynr run par/gauge_wave.par                 # run a parameter file
     pynr run par/kerr.par --set Cactus::cctk_itlast=20 --backend numpy
+    pynr run par/gauge_wave.par --output-root ~/pynr_runs   # -> ~/pynr_runs/gauge_wave
     pynr thorns                                 # list thorns
     pynr thorns --markdown > docs/reference/parameters.md
 """
@@ -33,6 +34,10 @@ def cmd_run(args):
         overrides["Driver::backend"] = args.backend
     if args.out:
         overrides["IO::out_dir"] = args.out
+    if args.output_root:
+        import os
+
+        os.environ["PYNR_OUTPUT_DIR"] = args.output_root
     Simulation.from_parfile(args.parfile, overrides=overrides).run()
 
 
@@ -69,7 +74,9 @@ def main(argv=None):
     r.add_argument("--set", action="append", metavar="Thorn::param=value",
                    help="override a parameter (repeatable)")
     r.add_argument("--backend", choices=["numba", "numpy"])
-    r.add_argument("--out", help="output directory")
+    r.add_argument("--out", help="output directory name (relative: under the output root)")
+    r.add_argument("--output-root", help="output root for relative output directories "
+                   "(default: $PYNR_OUTPUT_DIR, else <checkout>/simulations, else .)")
     r.set_defaults(func=cmd_run)
     t = sub.add_parser("thorns", help="list thorns and parameters")
     t.add_argument("--markdown", action="store_true", help="full parameter reference in Markdown")

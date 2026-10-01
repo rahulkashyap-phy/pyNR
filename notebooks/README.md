@@ -14,7 +14,9 @@ python -m ipykernel install --user --name pynr --display-name "Python (pyNR .ven
 cd notebooks && jupyter lab       # or open the .ipynb in VS Code -> Select Kernel -> Python (pyNR .venv)
 ```
 
-The notebooks use relative paths (`../par/...`), so start Jupyter in this
-folder. Online: open the repository in GitHub Codespaces or on Binder (see
-`docs/running-online.md`). Outputs are written next to the notebooks and are
-git-ignored.
+Each notebook starts with a **Settings** cell: `OUTPUT_ROOT` (default
+`<repo>/simulations`, the same folder `pynr run` writes to) and
+`RUN_SIMULATIONS`. You can run a parameter file in a terminal and only plot in
+the notebook, or run from the notebook; both read and write
+`simulations/<run name>/`. The notebooks use relative paths (`../par/...`), so
+start Jupyter in this folder. Online: see `docs/running-online.md`.

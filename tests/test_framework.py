@@ -52,3 +52,21 @@ def test_schedule_ordering():
     S.add("INITIAL", lambda: calls.append("c"), name="T::c", before=["T::a"])
     S.run("INITIAL")
     assert calls == ["c", "a", "b"]
+
+
+def test_output_root_shared_by_cli_and_notebooks(tmp_path, monkeypatch):
+    """Relative out_dirs resolve to <checkout>/simulations from any folder; env var overrides."""
+    import os
+
+    from pynr import paths
+
+    monkeypatch.delenv("PYNR_OUTPUT_DIR", raising=False)
+    checkout = paths.find_checkout(__file__)
+    assert checkout and os.path.isfile(os.path.join(checkout, "pyproject.toml"))
+    par = os.path.join(checkout, "par", "gauge_wave.par")
+    for cwd in (checkout, os.path.join(checkout, "notebooks")):
+        monkeypatch.chdir(cwd)
+        assert paths.resolve_out_dir("gauge_wave", par) == os.path.join(checkout, "simulations", "gauge_wave")
+    monkeypatch.setenv("PYNR_OUTPUT_DIR", str(tmp_path))
+    assert paths.run_dir("x", par) == os.path.join(str(tmp_path), "x")
+    assert paths.resolve_out_dir("/abs/run") == "/abs/run"

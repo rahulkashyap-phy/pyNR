@@ -1,16 +1,37 @@
 {
   "name": "pyNR",
   "image": "mcr.microsoft.com/devcontainers/python:3.12",
-  "hostRequirements": { "cpus": 4, "memory": "8gb" },
-  "postCreateCommand": "pip install -e '.[notebook,viz,test]' && python -m pytest -q tests/test_kernels.py",
-  "postAttachCommand": "echo 'pyNR ready: try  pynr run par/gauge_wave.par  or open notebooks/'",
-  "forwardPorts": [8888],
-  "portsAttributes": { "8888": { "label": "JupyterLab", "onAutoForward": "openBrowser" } },
-  "containerEnv": { "NUMBA_CACHE_DIR": "/workspaces/.numba_cache" },
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb"
+  },
+  "postCreateCommand": "pip install -e '.[notebook,viz,test]' && python -m ipykernel install --user --name pynr --display-name 'Python (pyNR)' && python -m pytest -q tests/test_kernels.py",
+  "postAttachCommand": "echo 'pyNR ready: pynr run par/gauge_wave.par  -> simulations/gauge_wave ; notebooks/ plot from there'",
+  "forwardPorts": [
+    8888
+  ],
+  "portsAttributes": {
+    "8888": {
+      "label": "JupyterLab",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "containerEnv": {
+    "NUMBA_CACHE_DIR": "/workspaces/.numba_cache"
+  },
   "customizations": {
-    "codespaces": { "openFiles": ["README.md", "notebooks/01_gauge_wave.ipynb"] },
+    "codespaces": {
+      "openFiles": [
+        "README.md",
+        "notebooks/01_gauge_wave.ipynb"
+      ]
+    },
     "vscode": {
-      "extensions": ["ms-python.python", "ms-toolsai.jupyter", "ms-python.vscode-pylance"]
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "ms-python.vscode-pylance"
+      ]
     }
   }
 }

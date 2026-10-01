@@ -3,7 +3,7 @@
 Each file runs on its own:
 
 ```bash
-pynr run par/<file>.par                         # output in ./<file>/
+pynr run par/<file>.par                         # output in <repo>/simulations/<file>/
 pynr run par/<file>.par --set CoordBase::dx=0.1 --out mydir
 ```
 
@@ -18,4 +18,4 @@ pynr run par/<file>.par --set CoordBase::dx=0.1 --out mydir
 
 The header of each file describes the physics and the measured outcome.
 Full write-ups: `docs/problems/`. Analyse the output with kuibit:
-`SimDir("<file>")`. Parameter reference: `python -m pynr thorns --markdown`.
+`SimDir(pynr.paths.run_dir("<file>"))`. Parameter reference: `python -m pynr thorns --markdown`.
