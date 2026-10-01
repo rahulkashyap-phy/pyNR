@@ -34,12 +34,20 @@ jobs:
           } > docs/reference/parameters.md
       - name: Build HTML
         run: sphinx-build -b html docs docs/_build/html
+      # Always available: Actions -> this run -> Artifacts -> docs-html (zip; open index.html)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: docs-html
+          path: docs/_build/html
+          retention-days: 30
       - uses: actions/upload-pages-artifact@v3
+        if: ${{ !github.event.repository.private }}
         with:
           path: docs/_build/html
 
+  # GitHub Pages: only once the repository is public (Settings -> Pages -> Source: GitHub Actions)
   deploy:
-    if: github.event_name != 'pull_request'
+    if: ${{ github.event_name != 'pull_request' && !github.event.repository.private }}
     needs: build
     runs-on: ubuntu-latest
     environment:
