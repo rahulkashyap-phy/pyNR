@@ -290,8 +290,17 @@ def save_gauge_wave():
     """Run the gauge wave at four settings; store alpha(x), alpha_exact(x) and metadata."""
     from pynr import Simulation
 
+    cwd = os.getcwd()
+    os.chdir(ROOT)  # relative out_dir: no local absolute paths in the stored parameters.par
+    try:
+        _save_gauge_wave_runs(Simulation)
+    finally:
+        os.chdir(cwd)
+
+
+def _save_gauge_wave_runs(Simulation):
     for tag, (dx, t_final) in GW_RUNS.items():
-        out = os.path.join(DATA, "gauge_wave", tag)
+        out = os.path.join("docs", "data", "gauge_wave", tag)
         shutil.rmtree(out, ignore_errors=True)
         over = {"CoordBase::dx": dx, "CoordBase::dy": dx, "CoordBase::dz": dx,
                 "CoordBase::ymin": -dx, "CoordBase::ymax": dx,
