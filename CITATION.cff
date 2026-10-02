@@ -9,8 +9,16 @@ authors:
     given-names: Rahul
     email: rahulkashyap@iitb.ac.in
     affiliation: Indian Institute of Technology Bombay
-version: 0.1.0.dev0
-date-released: 2026-09-26
+version: 0.1.0
+date-released: 2026-10-02
+doi: 10.5281/zenodo.23102127
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23102127
+    description: Concept DOI (all versions; resolves to the latest release)
+  - type: doi
+    value: 10.5281/zenodo.23102128
+    description: Version DOI of the first Zenodo release (tag 0.1)
 license: Apache-2.0
 repository-code: "https://github.com/rahulkashyap-phy/pyNR"
 url: "https://rahulkashyap-phy.github.io/pyNR"

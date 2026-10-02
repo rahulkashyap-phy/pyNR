@@ -22,7 +22,7 @@ Running a simulation::
 or from the shell: ``pynr run par/gauge_wave.par``.
 """
 
-__version__ = "0.1.0.dev0"
+__version__ = "0.1.0"
 
 from pynr.cactus.simulation import Simulation
 

@@ -31,7 +31,7 @@ product that uses it or builds on it:
 
 > R. Kashyap, *pyNR: numerical relativity in Python, organised like the
 > Einstein Toolkit*, Indian Institute of Technology Bombay (2026),
-> https://github.com/rahulkashyap-phy/pyNR
+> https://doi.org/10.5281/zenodo.23102127
 
 ```bibtex
 @software{kashyap_pynr_2026,
@@ -40,13 +40,16 @@ product that uses it or builds on it:
   institution = {Indian Institute of Technology Bombay},
   year        = {2026},
   url         = {https://github.com/rahulkashyap-phy/pyNR},
+  doi         = {10.5281/zenodo.23102127},
+  publisher   = {Zenodo},
   license     = {Apache-2.0}
 }
 ```
 
 Machine-readable citation metadata is in `CITATION.cff`. GitHub shows it as
-"Cite this repository". When a release is archived on Zenodo, cite its DOI
-instead.
+"Cite this repository". Releases are archived on Zenodo: the concept DOI
+[10.5281/zenodo.23102127](https://doi.org/10.5281/zenodo.23102127) always resolves to the latest version, and each
+release also has its own version DOI.
 
 If you use the Einstein Toolkit or kuibit together with pyNR, please also
 cite those projects.

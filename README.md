@@ -6,6 +6,7 @@
 [![docs](https://github.com/rahulkashyap-phy/pyNR/actions/workflows/docs.yml/badge.svg)](https://rahulkashyap-phy.github.io/pyNR)
 [![Open in Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/rahulkashyap-phy/pyNR)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rahulkashyap-phy/pyNR/main?labpath=notebooks)
+[![DOI](https://zenodo.org/badge/1400402667.svg)](https://doi.org/10.5281/zenodo.23102127)
 
 pyNR is a teaching and prototyping code for 3+1 numerical relativity.
 
@@ -96,11 +97,12 @@ Copyright 2026 Rahul Kashyap, Indian Institute of Technology Bombay.
   SPDX header, which must be kept.
 - **Please cite pyNR** in any publication, thesis, course material or product
   that uses it or builds on it. Use [CITATION.cff](CITATION.cff), or GitHub's
-  "Cite this repository" button:
+  "Cite this repository" button. The DOI [10.5281/zenodo.23102127](https://doi.org/10.5281/zenodo.23102127) (Zenodo) always
+  resolves to the latest release; each release also has its own version DOI on Zenodo:
 
   > R. Kashyap, *pyNR: numerical relativity in Python, organised like the
   > Einstein Toolkit*, Indian Institute of Technology Bombay (2026),
-  > https://github.com/rahulkashyap-phy/pyNR
+  > https://doi.org/10.5281/zenodo.23102127
 
   ```bibtex
   @software{kashyap_pynr_2026,
@@ -109,6 +111,8 @@ Copyright 2026 Rahul Kashyap, Indian Institute of Technology Bombay.
     institution = {Indian Institute of Technology Bombay},
     year        = {2026},
     url         = {https://github.com/rahulkashyap-phy/pyNR},
+    doi         = {10.5281/zenodo.23102127},
+    publisher   = {Zenodo},
     license     = {Apache-2.0}
   }
   ```
