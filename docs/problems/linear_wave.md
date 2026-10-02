@@ -23,6 +23,9 @@ equations up to $\mathcal{O}(A^2) \sim 10^{-16}$.
   This is the unit test `tests/test_kernels.py::test_psi4_linear_wave`, and it
   fixes the sign conventions of `WeylScal4`.
 
+```{include} ../_generated/arch/workflow_linear_wave.md
+```
+
 ## Exercises
 
 1. Plot `Psi4r.xy.h5` at several times and verify the propagation speed.

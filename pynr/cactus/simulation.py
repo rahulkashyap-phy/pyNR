@@ -24,7 +24,8 @@ from pynr.cactus.params import Parameters
 from pynr.cactus.parfile import parse_parfile, parse_parfile_text
 from pynr.cactus.schedule import Schedule
 from pynr.cactus.thorn import THORNS, Thorn
-from pynr.paths import resolve_out_dir
+from pynr.machine import machine_block, machine_line
+from pynr.paths import display_path, resolve_out_dir
 
 CORE_THORNS = ("Cactus", "CoordBase", "Driver", "Time", "IO")
 
@@ -83,9 +84,12 @@ class Simulation:
         for t in self.thorns.values():
             t.schedule(self.schedule)
 
+        if self._logfile:
+            self._logfile.write(machine_block(self.backend) + "\n")
         self.log(f"pyNR simulation '{name}': {len(self.thorns)} thorns active")
+        self.log(f"  machine: {machine_line()}")
         self.log(f"  {self.grid}, dt = {self.dt:g}, backend = {self.backend}")
-        self.log(f"  output: {self.out_dir}")
+        self.log(f"  output: {display_path(self.out_dir)}")
         self.log("Schedule:\n" + self.schedule.describe())
 
     # ------------------------------------------------------------------ #

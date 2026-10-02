@@ -1,0 +1,322 @@
+# pyNR architecture model: the curated source of truth for *meaning*.
+#
+# arch/check_drift.py compares this file with the graph extracted from the code (arch/extract.py) and fails
+# when they disagree. Rules for editing it: docs/developer-guide.md. Edges are always written on the component
+# that INITIATES them; reverse views ("used by", "called by") are derived, never written by hand.
+#
+#   uses:      [B]  A imports B and calls its functions          (call A -> B)
+#   requires:  [B]  thorn B must be active when A is             (activation, no call)
+#   reads:     [B]  A reads B's state at runtime (sim.thorn("B")) (data B -> A)
+#   registers: [{into, via, functions, stage}]                   A hands callbacks to B; B calls them (call B -> A)
+#
+# Paths: src (files or folders ending in '/'), doc (page), notes (page#label), equations (labels).
+
+layers:
+  # layer -> layers whose components it may `use` (import/call). Every layer may use `external`.
+  allowed_uses:
+    cli:      [driver, registry, flesh]
+    driver:   [driver, registry, flesh]
+    registry: [thorns]
+    thorns:   [flesh, backends, kernels, utils]
+    backends: [kernels]
+    kernels:  [kernels]
+    utils:    [utils]
+    flesh:    [flesh]
+    external: []
+  description: >-
+    The CLI and driver build simulations; the registry imports the thorns; thorns build on the flesh API and call
+    kernels and utils (through backends for swappable kernels); kernels and utils take arrays and scalars only and
+    never import the flesh or thorns. Thorns never import each other: they cooperate through requires, reads,
+    registered callbacks and grid functions.
+
+components:
+  # ------------------------------------------------------------------ flesh and driver
+  cli:
+    kind: infrastructure
+    layer: cli
+    src: [pynr/__main__.py]
+    doc: docs/installation.md
+    uses: [driver, registry, flesh]
+    summary: "`pynr run|thorns`: command-line entry point"
+  driver:
+    kind: flesh
+    layer: driver
+    src: [pynr/cactus/simulation.py, pynr/__init__.py, pynr/paths.py, pynr/machine.py]
+    doc: docs/framework.md
+    notes: docs/running-online.md#sec-output-location
+    uses: [registry, flesh, numba, numpy]
+    summary: "Simulation: activation, parameters, grid, setup, schedule, main loop; output root; machine block"
+  registry:
+    kind: flesh
+    layer: registry
+    src: [pynr/thorns/__init__.py]
+    doc: docs/framework.md
+    uses: [CoreThorns, ADMBase, Exact, Perturb, ADMEvolve, MoL, Dissipation, ADMConstraints, WeylScal4,
+           Multipole, IO]
+    summary: "imports every thorn module so @register_thorn runs"
+  flesh:
+    kind: flesh
+    layer: flesh
+    src: [pynr/cactus/__init__.py, pynr/cactus/thorn.py, pynr/cactus/params.py, pynr/cactus/schedule.py,
+          pynr/cactus/gridfunctions.py, pynr/cactus/grid.py, pynr/cactus/parfile.py]
+    doc: docs/framework.md
+    uses: [numpy]
+    summary: "the Cactus-like API: Thorn, Param, Schedule bins, GridFunctions, UniformGrid, .par reader"
+  backends:
+    kind: infrastructure
+    layer: backends
+    src: [pynr/backends.py]
+    doc: docs/reference/api.md
+    uses: [kernels.adm, kernels.adm_numpy]
+    summary: "selects the kernel implementation (Driver::backend = numba | numpy)"
+
+  # ------------------------------------------------------------------ thorns
+  CoreThorns:
+    kind: infrastructure
+    layer: thorns
+    src: [pynr/thorns/core.py]
+    thorns: [Cactus, CoordBase, Driver, Time, IO]
+    doc: docs/reference/index.md     # parameter reference is generated from it at build time
+    uses: [flesh]
+    summary: "always-active parameters: termination, domain, ghosts/backend, time step, output directory"
+  ADMBase:
+    kind: physics
+    layer: thorns
+    src: [pynr/thorns/admbase.py]
+    thorns: [ADMBase]
+    doc: docs/theory/three-plus-one.md
+    equations: [eq-line-element]
+    uses: [flesh, kernels.adm]
+    registers:
+      - {into: flesh, via: add, stage: INITIAL, functions: [initial_flat]}
+    summary: "owns the 3+1 variables (one (16,nx,ny,nz) array) and the initial-data/gauge selectors"
+  Exact:
+    kind: physics
+    layer: thorns
+    src: [pynr/thorns/exact.py]
+    thorns: [Exact]
+    doc: docs/theory/three-plus-one.md
+    notes: docs/problems/gauge_wave.md#eq-gauge-wave-metric
+    equations: [eq-gauge-wave, eq-schwarzschild-isotropic, eq-kerr-schild]
+    uses: [flesh, kernels.adm, numpy]
+    requires: [ADMBase]
+    reads: [ADMBase]
+    registers:
+      - {into: flesh, via: add, stage: INITIAL, functions: [initial_data]}
+    summary: "analytic spacetimes: gauge wave, linear wave, Schwarzschild (isotropic), Kerr (Kerr-Schild)"
+  Perturb:
+    kind: physics
+    layer: thorns
+    src: [pynr/thorns/perturb.py]
+    thorns: [Perturb]
+    doc: docs/theory/three-plus-one.md
+    notes: docs/problems/perturbed_bh.md#eq-perturbation-profile
+    equations: [eq-perturbation]
+    uses: [flesh, numpy, utils.swsh]
+    requires: [ADMBase]
+    reads: [ADMBase]
+    registers:
+      - {into: flesh, via: add, stage: INITIAL, functions: [perturb]}
+    summary: "Gaussian (l, m) metric perturbation (constraint-violating, for ringing a black hole)"
+  ADMEvolve:
+    kind: physics
+    layer: thorns
+    src: [pynr/thorns/admevolve.py]
+    thorns: [ADMEvolve]
+    doc: docs/theory/gauge.md
+    notes: docs/problems/kerr_schild.md#tab-ks-lifetime
+    equations: [eq-adm-evolution, eq-lie-derivative, eq-ricci]
+    uses: [flesh, backends, kernels.adm, kernels.boundary, numpy]
+    requires: [ADMBase, MoL]
+    reads: [ADMBase, MoL]
+    registers:
+      - {into: MoL, via: register_evolved, stage: EVOL, functions: [rhs, post, rhs_final]}
+      - {into: flesh, via: add, stage: POSTINITIAL, functions: [sanitize_excision]}
+    summary: "ADM evolution equations, slicing conditions, outer boundaries, excision"
+  MoL:
+    kind: numerics
+    layer: thorns
+    src: [pynr/thorns/mol.py]
+    thorns: [MoL]
+    doc: docs/theory/numerical-methods.md
+    uses: [flesh, numpy, utils.integrators]
+    registers:
+      - {into: flesh, via: add, stage: EVOL, functions: [step]}
+      - {into: flesh, via: add, stage: POSTINITIAL, functions: [post_initial]}
+      - {into: flesh, via: add, stage: POSTSTEP, functions: [check_nan]}
+    summary: "method of lines: Runge-Kutta steps, RHS hooks, blow-up abort"
+  Dissipation:
+    kind: numerics
+    layer: thorns
+    src: [pynr/thorns/dissipation.py]
+    thorns: [Dissipation]
+    doc: docs/theory/numerical-methods.md
+    equations: [eq-kreiss-oliger]
+    uses: [flesh, kernels.dissipation]
+    requires: [MoL]
+    reads: [MoL]
+    registers:
+      - {into: MoL, via: add_rhs_hook, stage: EVOL, functions: [add]}
+    summary: "Kreiss-Oliger dissipation added to every MoL right-hand side"
+  ADMConstraints:
+    kind: analysis
+    layer: thorns
+    src: [pynr/thorns/admconstraints.py]
+    thorns: [ADMConstraints]
+    doc: docs/theory/three-plus-one.md
+    notes: docs/problems/kerr_schild.md#fig-kerr-constraints
+    equations: [eq-constraints]
+    uses: [flesh, backends]
+    requires: [ADMBase]
+    reads: [ADMBase, ADMEvolve]
+    registers:
+      - {into: flesh, via: "register(update=)", stage: on demand, functions: [compute]}
+    summary: "Hamiltonian and momentum constraints, computed on demand (zero inside the excision region)"
+  WeylScal4:
+    kind: analysis
+    layer: thorns
+    src: [pynr/thorns/weylscal4.py]
+    thorns: [WeylScal4]
+    doc: docs/theory/gw-extraction.md
+    equations: [eq-psi4-strain, eq-psi4-tetrad, eq-weyl-electric-magnetic]
+    uses: [flesh, backends]
+    requires: [ADMBase]
+    reads: [ADMBase]
+    registers:
+      - {into: flesh, via: "register(update=)", stage: on demand, functions: [compute]}
+    summary: "Newman-Penrose Psi4 on the grid, computed on demand"
+  Multipole:
+    kind: analysis
+    layer: thorns
+    src: [pynr/thorns/multipole.py]
+    thorns: [Multipole]
+    doc: docs/theory/gw-extraction.md
+    notes: docs/problems/perturbed_bh.md#fig-perturbed-psi4
+    equations: [eq-multipole-projection]
+    uses: [flesh, numpy, utils.geodesic, utils.interpolation, utils.swsh]
+    registers:
+      - {into: flesh, via: add, stage: ANALYSIS, functions: [analyse]}
+    summary: "spin-weighted multipoles of Psi4 on geodesic spheres; mp_*.asc output"
+  IO:
+    kind: io
+    layer: thorns
+    src: [pynr/thorns/io.py]
+    thorns: [IOHDF5, IOScalar, IOBasic]
+    doc: docs/visualization.md
+    notes: docs/visualization.md#tab-kuibit-files
+    uses: [flesh, h5py, numpy]
+    registers:
+      - {into: flesh, via: add, stage: OUTPUT, functions: [output]}
+    summary: "Carpet-format HDF5, CarpetIOScalar reductions, stdout table"
+
+  # ------------------------------------------------------------------ kernels
+  kernels.fd:
+    kind: kernel
+    layer: kernels
+    src: [pynr/kernels/fd.py]
+    doc: docs/theory/numerical-methods.md
+    equations: [eq-fd-stencils]
+    uses: [numba]
+    summary: "4th-order finite-difference stencils (Numba, inlined)"
+  kernels.adm:
+    kind: kernel
+    layer: kernels
+    src: [pynr/kernels/adm.py, pynr/kernels/__init__.py]
+    doc: docs/theory/three-plus-one.md
+    equations: [eq-adm-evolution, eq-lie-derivative, eq-ricci, eq-dgamma-contractions, eq-constraints-kernel,
+                eq-weyl-electric-magnetic, eq-psi4-tetrad]
+    uses: [kernels.fd, numba, numpy]
+    summary: "ADM right-hand side, constraints and Psi4 kernels (Numba, parallel)"
+  kernels.adm_numpy:
+    kind: kernel
+    layer: kernels
+    src: [pynr/kernels/adm_numpy.py]
+    doc: docs/reference/api.md
+    uses: [kernels.adm, numpy]
+    summary: "vectorised NumPy reference ADM right-hand side"
+  kernels.boundary:
+    kind: kernel
+    layer: kernels
+    src: [pynr/kernels/boundary.py]
+    doc: docs/theory/numerical-methods.md
+    equations: [eq-sommerfeld]
+    uses: [numba, numpy]
+    summary: "static/radiative RHS boundaries, periodic and flat syncs"
+  kernels.dissipation:
+    kind: kernel
+    layer: kernels
+    src: [pynr/kernels/dissipation.py]
+    doc: docs/theory/numerical-methods.md
+    equations: [eq-kreiss-oliger]
+    uses: [numba]
+    summary: "Kreiss-Oliger dissipation kernel"
+
+  # ------------------------------------------------------------------ utils
+  utils.integrators:
+    kind: numerics
+    layer: utils
+    src: [pynr/utils/integrators.py, pynr/utils/__init__.py]
+    doc: docs/theory/numerical-methods.md
+    uses: [numpy]
+    summary: "Euler, RK2, ICN, SSP-RK3, RK4 (in place, reusable buffers)"
+  utils.interpolation:
+    kind: numerics
+    layer: utils
+    src: [pynr/utils/interpolation.py]
+    doc: docs/theory/gw-extraction.md
+    equations: [eq-lagrange]
+    uses: [numba, numpy]
+    summary: "Lagrange interpolation from the grid to arbitrary points"
+  utils.geodesic:
+    kind: numerics
+    layer: utils
+    src: [pynr/utils/geodesic.py]
+    doc: docs/theory/gw-extraction.md
+    equations: [eq-sphere-quadrature]
+    uses: [numpy]
+    summary: "icosahedral geodesic spheres and quadrature weights"
+  utils.swsh:
+    kind: numerics
+    layer: utils
+    src: [pynr/utils/swsh.py]
+    doc: docs/theory/gw-extraction.md
+    equations: [eq-swsh-decomposition, eq-swsh-goldberg]
+    uses: [numpy]
+    summary: "spin-weighted spherical harmonics (ET Multipole convention)"
+
+  # ------------------------------------------------------------------ external
+  numpy:      {kind: external, layer: external, summary: "arrays"}
+  numba:      {kind: external, layer: external, summary: "JIT compilation, threads"}
+  h5py:       {kind: external, layer: external, summary: "HDF5 output"}
+  kuibit:     {kind: external, layer: external, summary: "analysis and plotting of ET/pyNR runs"}
+
+flows:
+  # Data passed between components during a run (not code dependencies). `data`: grid-function groups/variables
+  # (Thorn::name, must exist in some par-file run) or a description in quotes; `stage`: schedule bin or "on demand".
+  - {from: Exact,          to: ADMBase,        stage: INITIAL,   data: [ADMBase::metric, ADMBase::curv, ADMBase::lapse, ADMBase::shift]}
+  - {from: Perturb,        to: ADMBase,        stage: INITIAL,   data: [ADMBase::metric]}
+  - {from: ADMBase,        to: ADMEvolve,      stage: EVOL,      data: [ADMBase::metric, ADMBase::curv, ADMBase::lapse, ADMBase::shift]}
+  - {from: ADMEvolve,      to: MoL,            stage: EVOL,      data: ["RHS dU/dt"]}
+  - {from: Dissipation,    to: MoL,            stage: EVOL,      data: ["Kreiss-Oliger term"]}
+  - {from: MoL,            to: ADMBase,        stage: EVOL,      data: ["updated state U"]}
+  - {from: ADMBase,        to: ADMConstraints, stage: on demand, data: [ADMBase::metric, ADMBase::curv]}
+  - {from: ADMBase,        to: WeylScal4,      stage: on demand, data: [ADMBase::metric, ADMBase::curv]}
+  - {from: WeylScal4,      to: Multipole,      stage: ANALYSIS,  data: [WeylScal4::Psi4r, WeylScal4::Psi4i]}
+  - {from: ADMBase,        to: IO,             stage: OUTPUT,    data: [ADMBase::metric, ADMBase::lapse]}
+  - {from: ADMConstraints, to: IO,             stage: OUTPUT,    data: [ADMConstraints::ham]}
+  - {from: WeylScal4,      to: IO,             stage: OUTPUT,    data: [WeylScal4::Psi4r]}
+  - {from: IO,             to: kuibit,         stage: OUTPUT,    data: ["*.h5, *.asc"]}
+  - {from: Multipole,      to: kuibit,         stage: ANALYSIS,  data: ["mp_Psi4_l*_m*_r*.asc"]}
+
+views:
+  # hide: components left out of the view; hide_edges_to: edges into these are omitted (said in the caption)
+  physics:  {include_kinds: [physics, analysis, io], edges: [requires, flows],
+             title: "Physics view: thorns, their activation requirements and the data flow between them"}
+  runtime:  {exclude_kinds: [external, kernel, flesh], hide: [utils.integrators, utils.interpolation, utils.geodesic,
+             utils.swsh, backends, cli], edges: [flows, registers],
+             title: "Runtime view: data flow (coloured by schedule bin) and callbacks"}
+  code:     {exclude_kinds: [external], hide: [registry, flesh], edges: [uses],
+             title: "Code view: who calls whom (imports). Every thorn also uses the flesh API, and the registry imports all thorns; both are omitted for readability"}
+  full:     {exclude_kinds: [external], hide: [registry, cli, driver, flesh],
+             edges: [uses, requires, reads, registers, flows],
+             title: "Full model of the thorns, kernels and utils (flesh, driver, registry, CLI and external libraries omitted; see the code view and the component table)"}

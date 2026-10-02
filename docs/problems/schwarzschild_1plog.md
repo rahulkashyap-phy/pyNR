@@ -48,6 +48,9 @@ milestone. There the same parfile (with `evolution_method = "BSSN"` and a
 Gamma-driver shift) should run for hundreds of $M$, with $\min\alpha \to 0.3$
 at the puncture.
 
+```{include} ../_generated/arch/workflow_schwarzschild_1plog.md
+```
+
 ## Exercises
 
 1. Plot `alp.minimum.asc` and `alp.maximum.asc`. Where is $\alpha$ largest

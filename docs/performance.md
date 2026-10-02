@@ -15,7 +15,7 @@
 - Kreiss-Oliger dissipation loops with the contiguous index innermost, so it
   vectorises (SIMD).
 
-## Measured (Apple M-series laptop, 12 threads, Python 3.14, Numba 0.67)
+## Measured on an Apple M3 Pro, 12 cores (6P+6E), 18 GB, macOS 27, Python 3.14, Numba 0.67, 12 threads
 
 ```{table} Measured kernel timings.
 :name: tab-performance
@@ -30,7 +30,7 @@
 Reproduce with `python scripts/benchmark.py 96`.
 
 A full RK4 step of problem 6 ($135^3$ points, ADM + dissipation + boundaries)
-takes 1.4 s on this laptop: 576 steps in 823 s.
+takes about 1 s on this machine: 576 steps in 593 s (the problem-set cost table, {numref}`tab-problem-cost`, lists all problems with their machine).
 
 ## Where the remaining factor lies
 
@@ -38,6 +38,6 @@ A hand-tuned C++ ADM kernel would be roughly 3–5× faster per core. The gap
 comes from the per-point scratch arrays (`g`, `gu`, `dg`, ...): LLVM cannot
 prove they don't alias one another, so it keeps them in memory instead of
 registers, and it cannot vectorise across grid points. The planned fix, the
-first item on the [roadmap](roadmap.md), is to process a whole row of `k` at a
+first item on the [roadmap](roadmap/index.md), is to process a whole row of `k` at a
 time, with every tensor operation as a short, SIMD-friendly loop over `k`.
 This is the layout that code generators such as Kranc/McLachlan emit.

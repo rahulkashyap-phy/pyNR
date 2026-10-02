@@ -33,12 +33,14 @@ viz = ["kuibit>=1.5", "matplotlib>=3.7"]
 notebook = ["jupyterlab>=4", "ipywidgets>=8", "kuibit>=1.5", "matplotlib>=3.7"]
 docs = [
     "matplotlib>=3.7",  # figures are drawn from docs/data at build time
+    "pyyaml>=6",        # arch/model.yaml (architecture diagrams, workflows)
+    "sphinxcontrib-mermaid>=0.9",
     "sphinx>=7.2",
     "furo>=2024.1",
     "myst-parser>=2.0",
     "sphinx-copybutton>=0.5",
 ]
-test = ["pytest>=7", "sympy>=1.12"]
+test = ["pytest>=7", "sympy>=1.12", "pyyaml>=6"]
 dev = ["pynr[viz,notebook,docs,test]", "ruff>=0.5"]
 
 [project.scripts]
@@ -53,7 +55,7 @@ Source = "https://github.com/rahulkashyap-phy/pyNR"
 path = "pynr/__init__.py"
 
 [tool.hatch.build.targets.sdist]
-include = ["pynr", "par", "tests", "README.md", "LICENSE", "NOTICE", "CITATION.cff"]
+include = ["pynr", "par", "tests", "arch", "README.md", "LICENSE", "NOTICE", "CITATION.cff"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

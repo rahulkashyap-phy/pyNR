@@ -27,8 +27,8 @@ PNGs add about 0.2 MB. The 2D/3D HDF5 outputs (~30 MB) are never stored.
 ```bash
 source .venv/bin/activate                     # see Installation
 mkdir -p runs && cd runs
-pynr run ../par/kerr_schild.par               # ~1 min on 12 cores
-pynr run ../par/schwarzschild_perturbed.par   # ~12-15 min on 12 cores
+pynr run ../par/kerr_schild.par               # 57 s on an Apple M3 Pro, 12 cores (6P+6E)
+pynr run ../par/schwarzschild_perturbed.par   # ~10 min on an Apple M3 Pro, 12 cores (6P+6E)
 cd ..
 python scripts/make_doc_figures.py save --runs runs   # copies the data, runs the gauge-wave cases (~10 s)
 sphinx-build -b html docs docs/_build/html            # figures are rendered from docs/data

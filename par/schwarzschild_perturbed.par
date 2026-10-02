@@ -10,7 +10,7 @@
 # the ringdown. The run completes to t = 36 M. A clean QNM needs BSSN/Z4c
 # (roadmap); see docs/problems/perturbed_bh.md.
 #
-# Cost: 135^3 points, ~15 min on a 12-core laptop.
+# Cost: 136^3 points incl. ghosts, 593 s (~10 min) on an Apple M3 Pro, 12 cores (6P+6E).
 
 ActiveThorns = "ADMBase Exact Perturb ADMEvolve MoL Dissipation ADMConstraints
                 WeylScal4 Multipole IOHDF5 IOScalar IOBasic"

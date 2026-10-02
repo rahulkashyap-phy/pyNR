@@ -49,6 +49,36 @@ Or open the repository in **GitHub Codespaces**. Verified students and
 teachers get free hours through [GitHub Education](https://github.com/education).
 Everything, including JupyterLab, is preinstalled.
 
+## Building the documentation (HTML site + PDF lecture notes)
+
+Run these commands **from the repository root**, the folder that contains `docs/`, `pynr/` and
+`pyproject.toml`, with the virtual environment active. `make -C docs …` runs `make` inside `docs/`, so
+`cd docs && make all` is equivalent.
+
+```bash
+cd pyNR                                   # repository root (your clone / worktree)
+source .venv/bin/activate                 # the environment where pyNR is installed
+pip install -e ".[docs]"                  # once: Sphinx, MyST, Graphviz bindings, matplotlib, PyYAML
+pynr thorns --markdown > docs/reference/parameters.md   # parameter reference (generated)
+
+make -C docs all        # PDF lecture notes (LaTeX) + HTML site that serves and links the PDF
+make -C docs html       # HTML only
+make -C docs latexpdf   # PDF only
+make -C docs clean      # remove docs/_build and docs/_generated
+
+open docs/_build/html/index.html                      # the site (macOS; `xdg-open` on Linux)
+open docs/_build/latex/pyNR-lecture-notes.pdf         # the PDF
+```
+
+Requirements outside Python:
+- **Graphviz** (`dot`) for the diagrams: `brew install graphviz` or `apt install graphviz`. Without it, the
+  diagrams are replaced by a note.
+- For the PDF, **TeX Live** with `lualatex` and `latexmk`: MacTeX, or
+  `apt install latexmk texlive-luatex texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra`.
+
+The build draws the figures from `docs/data/`, the architecture diagrams from `arch/model.yaml`, and the problem
+workflows from `par/*.par`. Everything it generates is git-ignored. See `docs/README.md` for details.
+
 ## What's in v0.1
 
 | | |
@@ -65,8 +95,45 @@ Everything, including JupyterLab, is preinstalled.
 
 Problems with equations and expected results are in
 [the documentation](https://rahulkashyap-phy.github.io/pyNR/problems/). The
-[roadmap](docs/roadmap.md) covers BSSN/Z4c, moving punctures, horizon
+[roadmap](docs/roadmap/index.md) covers BSSN/Z4c, moving punctures, horizon
 finding, elliptic initial data, mesh refinement and GPU/MPI.
+
+## Architecture
+
+<!-- arch:begin -->
+```mermaid
+flowchart LR
+  ADMBase[ADMBase]
+  Exact[Exact]
+  Perturb[Perturb]
+  ADMEvolve[ADMEvolve]
+  MoL[MoL]
+  Dissipation[Dissipation]
+  ADMConstraints[ADMConstraints]
+  WeylScal4[WeylScal4]
+  Multipole[Multipole]
+  IO[IO]
+  kuibit([kuibit])
+  Exact -->|INITIAL| ADMBase
+  Perturb -->|INITIAL| ADMBase
+  ADMBase -->|EVOL| ADMEvolve
+  ADMEvolve -->|EVOL| MoL
+  Dissipation -->|EVOL| MoL
+  MoL -->|EVOL| ADMBase
+  ADMBase -->|on demand| ADMConstraints
+  ADMBase -->|on demand| WeylScal4
+  WeylScal4 -->|ANALYSIS| Multipole
+  ADMBase -->|OUTPUT| IO
+  ADMConstraints -->|OUTPUT| IO
+  WeylScal4 -->|OUTPUT| IO
+  IO -->|OUTPUT| kuibit
+  Multipole -->|ANALYSIS| kuibit
+  MoL -. calls rhs/post/rhs_final .-> ADMEvolve
+  MoL -. calls add .-> Dissipation
+```
+
+*Thorns and the data flow between them, by schedule bin. Dotted arrows are callbacks. Generated from `arch/model.yaml`; the full interactive model is on the Architecture page of the docs.*
+<!-- arch:end -->
 
 ## Layout
 

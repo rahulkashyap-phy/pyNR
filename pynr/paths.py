@@ -75,3 +75,20 @@ def list_runs(near: str | os.PathLike | None = None) -> list[str]:
         return []
     return sorted(d for d in os.listdir(root)
                   if os.path.isfile(os.path.join(root, d, "pynr.log")))
+
+
+def display_path(path: str | os.PathLike) -> str:
+    """Path for logs and docs without local user details.
+
+    Relative to the pyNR checkout if inside it, else relative to the home
+    directory as ``~/...``, else unchanged. Keeps ``pynr.log`` files free of
+    ``/Users/<name>`` when they are published as documentation data.
+    """
+    p = os.path.abspath(path)
+    checkout = find_checkout(p)
+    if checkout and (p == checkout or p.startswith(checkout + os.sep)):
+        return os.path.relpath(p, checkout)
+    home = os.path.expanduser("~")
+    if p.startswith(home + os.sep):
+        return "~" + p[len(home):]
+    return p

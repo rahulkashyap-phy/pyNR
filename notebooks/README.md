@@ -2,8 +2,8 @@
 
 | notebook | content | run time |
 |---|---|---|
-| `01_gauge_wave.ipynb` | first run, comparison with the exact solution, convergence test, kuibit | ~1 min |
-| `02_perturbed_black_hole.ipynb` | perturbed Schwarzschild, Ψ₄ multipoles, why ADM fails | ~10 min |
+| `01_gauge_wave.ipynb` | first run, comparison with the exact solution, convergence test, kuibit | ~1 min (Apple M3 Pro, 12 cores) |
+| `02_perturbed_black_hole.ipynb` | perturbed Schwarzschild, Ψ₄ multipoles, why ADM fails | ~10 min (Apple M3 Pro, 12 cores) |
 
 Run locally:
 

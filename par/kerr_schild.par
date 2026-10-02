@@ -3,7 +3,7 @@
 # Expected: in the continuum nothing changes; numerically d/dt of the metric is
 # O(dx^4) truncation error at t = 0 (see tests). max|H| ~ 0.03 at t = 0, ~0.1 at
 # t = 10 M, then the ADM constraint-violating mode grows exponentially and the
-# run aborts at t ~ 24 M (measured; ~1 min on 12 cores).
+# run aborts at t ~ 24 M (measured: 57 s on an Apple M3 Pro, 12 cores (6P+6E)).
 # See docs/problems/kerr_schild.md for the Schwarzschild stability table.
 
 ActiveThorns = "ADMBase Exact ADMEvolve MoL Dissipation ADMConstraints IOHDF5 IOScalar IOBasic"

@@ -34,6 +34,9 @@ settings of the reference run, read from its `parameters.par`.
   `tests/test_evolution.py::test_gauge_wave_converges_4th_order` and shown in
   {numref}`fig-gauge-wave` (right) and `notebooks/01_gauge_wave.ipynb`.
 
+```{include} ../_generated/arch/workflow_gauge_wave.md
+```
+
 ## Exercises
 
 1. $A = 0.5$: run to $t = 100$. The ADM system is known to be unstable on

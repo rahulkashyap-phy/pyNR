@@ -21,8 +21,14 @@ implement them sit right next to each other.
   $\Psi_4$ multipoles are written in Carpet formats, so
   [kuibit](https://sbozzolo.github.io/kuibit) reads a pyNR run as it reads an
   ET run.
+- **Architecture you can see.** A curated model of the code is checked against the code on every build, and
+  rendered as diagrams, an interactive explorer and per-problem workflows ([Architecture](architecture.md)).
+- **PDF lecture notes** from the same sources: `make -C docs latexpdf`.
 - **Runs in the browser.** GitHub Codespaces (free hours for verified
   students and teachers through GitHub Education) and Binder.
+
+```{include} _generated/pdf_link.md
+```
 
 ```{toctree}
 :maxdepth: 2
@@ -49,9 +55,27 @@ notes/index
 :caption: The code
 
 framework
+architecture
+developer-guide
+software-engineering
 utilities
 performance
-roadmap
 devlog/index
+docgraph
 reference/index
+```
+
+```{toctree}
+:maxdepth: 2
+:caption: Roadmap
+
+roadmap/index
+```
+
+```{toctree}
+:maxdepth: 2
+:caption: rkdev: personal workflow
+:glob:
+
+rkdev/index
 ```

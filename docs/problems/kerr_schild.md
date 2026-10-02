@@ -48,6 +48,9 @@ $\partial_t\gamma_{ij} = \partial_t K_{ij} = 0$ in the continuum.
 ```{include} ../figures/kerr_constraints.md
 ```
 
+```{include} ../_generated/arch/workflow_kerr_schild.md
+```
+
 ## Exercises
 
 1. Reproduce the table (use `--set`, e.g.

@@ -45,7 +45,7 @@ What this problem demonstrates today is the **extraction machinery**:
 $\Psi_4$ on the grid, interpolation to geodesic spheres, ${}_{-2}Y_{\ell m}$
 projection and kuibit-compatible output. Validating the physics (the QNM
 frequency) needs a formulation that stays stable for $\gtrsim 100M$. That is
-the BSSN/Z4c milestone on the [roadmap](../roadmap.md), and this problem is
+the BSSN/Z4c milestone on the [roadmap](../roadmap/index.md), and this problem is
 its acceptance test.
 
 ## Caveats
@@ -54,3 +54,6 @@ its acceptance test.
 - Finite extraction radius: $\Psi_4(r)$ differs from $\Psi_4(\infty)$ at
   $\mathcal{O}(M/r)$.
 - The ADM system limits the useful part of the run to $t \lesssim 20M$ (see problem 5).
+
+```{include} ../_generated/arch/workflow_schwarzschild_perturbed.md
+```

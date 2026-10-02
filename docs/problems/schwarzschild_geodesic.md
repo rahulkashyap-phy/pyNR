@@ -53,6 +53,9 @@ light cones at any excision surface point both ways, so information would
 have to flow *out of* the frozen region
 (try `--set ADMEvolve::excision_radius=0.4`: the crash moves only to $t \approx 1.2M$).
 
+```{include} ../_generated/arch/workflow_schwarzschild_geodesic.md
+```
+
 ## Exercises
 
 1. Confirm the table, and use the snippet below to watch where

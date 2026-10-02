@@ -8,7 +8,8 @@
 | [`utils/`](utils/) | generic numerical methods | [utils/README.md](utils/README.md) |
 | `backends.py` | picks kernel implementation (`Driver::backend`) | — |
 | `__main__.py` | CLI: `pynr run`, `pynr thorns` | — |
-| `paths.py` | output root shared by the CLI and notebooks (`run_dir`, `list_runs`) | — |
+| `paths.py` | output root shared by the CLI and notebooks (`run_dir`, `list_runs`, `display_path`) | — |
+| `machine.py` | machine description written at the top of every `pynr.log` (CPU, cores, RAM, OS, versions, threads) | — |
 
 ## Install and check
 

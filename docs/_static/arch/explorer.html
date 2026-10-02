@@ -1,0 +1,122 @@
+<!doctype html>
+<!-- Copyright 2026 Rahul Kashyap (Indian Institute of Technology Bombay). SPDX-License-Identifier: Apache-2.0 -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pyNR architecture explorer</title>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
+<style>
+  :root { --bg:#ffffff; --fg:#111827; --muted:#6b7280; --panel:#f9fafb; --border:#e5e7eb; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#111827; --fg:#f3f4f6; --muted:#9ca3af; --panel:#1f2937; --border:#374151; } }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--fg); font:13px/1.4 Helvetica, Arial, sans-serif; }
+  #wrap { display:flex; height:100%; }
+  #side { width:300px; padding:10px 12px; border-right:1px solid var(--border); background:var(--panel); overflow:auto; box-sizing:border-box; }
+  #cy { flex:1; min-width:0; }
+  h1 { font-size:15px; margin:0 0 8px; }
+  fieldset { border:1px solid var(--border); border-radius:6px; margin:0 0 10px; padding:6px 8px; }
+  legend { color:var(--muted); font-size:11px; }
+  label { display:block; cursor:pointer; }
+  input[type=search] { width:100%; box-sizing:border-box; padding:4px 6px; border:1px solid var(--border); border-radius:4px; background:var(--bg); color:var(--fg); }
+  #info a { color:#2563eb; } #info code { font-size:11px; }
+  .sw { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:4px; vertical-align:middle; }
+  .muted { color:var(--muted); font-size:11px; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="side">
+    <h1>pyNR architecture</h1>
+    <p class="muted">Generated from <code>arch/model.yaml</code>. Click a component for its source, docs, notes and
+      equations; drag to rearrange; scroll to zoom.</p>
+    <input id="q" type="search" placeholder="search components…">
+    <fieldset><legend>edges</legend>
+      <label><input type="checkbox" data-edge="uses" checked> uses (imports / calls)</label>
+      <label><input type="checkbox" data-edge="requires"> requires (activation)</label>
+      <label><input type="checkbox" data-edge="reads"> reads (runtime state)</label>
+      <label><input type="checkbox" data-edge="callback" checked> callbacks (registered functions)</label>
+      <label><input type="checkbox" data-edge="flow" checked> data flow (by schedule bin)</label>
+    </fieldset>
+    <fieldset id="kinds"><legend>kinds</legend></fieldset>
+    <fieldset><legend>layout</legend>
+      <label><input type="radio" name="lay" value="dagre" checked> layered (dagre)</label>
+      <label><input type="radio" name="lay" value="cose"> force-directed</label>
+    </fieldset>
+    <div id="info" class="muted">Select a component.</div>
+  </div>
+  <div id="cy"></div>
+</div>
+<script>
+const EDGE_STYLE = {
+  uses:     {'line-color':'#9ca3af','target-arrow-color':'#9ca3af','line-style':'solid'},
+  requires: {'line-color':'#374151','target-arrow-color':'#374151','line-style':'dotted'},
+  reads:    {'line-color':'#2563eb','target-arrow-color':'#2563eb','line-style':'dashed'},
+  callback: {'line-color':'#ea580c','target-arrow-color':'#ea580c','line-style':'dashed'},
+};
+fetch('../arch_model.json').then(r => r.json()).then(model => {
+  const kinds = [...new Set(model.elements.nodes.map(n => n.data.kind).filter(k => k !== 'layer'))];
+  const kf = document.getElementById('kinds');
+  kinds.forEach(k => { kf.insertAdjacentHTML('beforeend',
+    `<label><input type="checkbox" data-kind="${k}" ${k==='external'?'':'checked'}>` +
+    `<span class="sw" style="background:${model.kind_colors[k]||'#fff'};border:1px solid #999"></span>${k}</label>`); });
+  const style = [
+    {selector:'node', style:{'label':'data(label)','font-size':10,'text-valign':'center','text-halign':'center',
+      'shape':'round-rectangle','width':'label','height':22,'padding':'6px','border-width':1,'border-color':'#9ca3af',
+      'background-color': n => model.kind_colors[n.data('kind')] || '#fff','color':'#111'}},
+    {selector:'node[kind = "layer"]', style:{'label':'data(label)','text-valign':'top','font-size':10,'color':'#6b7280',
+      'background-opacity':0.04,'border-style':'dashed','border-color':'#d1d5db'}},
+    {selector:'edge', style:{'width':1.2,'curve-style':'bezier','target-arrow-shape':'triangle','arrow-scale':0.7,
+      'font-size':8,'text-rotation':'autorotate','text-background-opacity':0.8,'text-background-color':'#fff'}},
+    {selector:'edge[type = "flow"]', style:{'width':2.2,'line-color':'data(color)','target-arrow-color':'data(color)',
+      'label':'data(label)','color':'data(color)'}},
+    {selector:'edge[type = "callback"]', style:{'label':'data(label)','color':'#ea580c'}},
+    {selector:'.hidden', style:{'display':'none'}},
+    {selector:'.dim', style:{'opacity':0.15}},
+    {selector:':selected', style:{'border-width':3,'border-color':'#b91c1c'}},
+  ];
+  Object.entries(EDGE_STYLE).forEach(([t, s]) => style.push({selector:`edge[type = "${t}"]`, style:s}));
+  const cy = cytoscape({container:document.getElementById('cy'), elements:model.elements, style,
+    layout:{name:'dagre', rankDir:'LR', nodeSep:18, rankSep:60}, wheelSensitivity:0.25});
+  function apply() {
+    const edgeOn = {}; document.querySelectorAll('[data-edge]').forEach(c => edgeOn[c.dataset.edge] = c.checked);
+    const kindOn = {}; document.querySelectorAll('[data-kind]').forEach(c => kindOn[c.dataset.kind] = c.checked);
+    cy.nodes().forEach(n => { if (n.data('kind') !== 'layer') n.toggleClass('hidden', !kindOn[n.data('kind')]); });
+    cy.edges().forEach(e => e.toggleClass('hidden', !edgeOn[e.data('type')] ||
+      e.source().hasClass('hidden') || e.target().hasClass('hidden')));
+    cy.nodes('[kind = "layer"]').forEach(l => l.toggleClass('hidden', l.children(':visible').length === 0));
+  }
+  function relayout() {
+    const name = document.querySelector('input[name=lay]:checked').value;
+    cy.layout(name === 'dagre' ? {name:'dagre', rankDir:'LR', nodeSep:18, rankSep:60} : {name:'cose', animate:false})
+      .run();
+  }
+  document.querySelectorAll('[data-edge],[data-kind]').forEach(c => c.addEventListener('change', () => { apply(); relayout(); }));
+  document.querySelectorAll('input[name=lay]').forEach(c => c.addEventListener('change', relayout));
+  document.getElementById('q').addEventListener('input', ev => {
+    const q = ev.target.value.trim().toLowerCase();
+    cy.elements().removeClass('dim');
+    if (q) cy.nodes().filter(n => n.data('kind') !== 'layer' && !n.data('label').toLowerCase().includes(q)).addClass('dim');
+  });
+  cy.on('tap', 'node', ev => {
+    const d = ev.target.data(); if (d.kind === 'layer') return;
+    const link = (u, t) => u ? `<a href="${u}" target="_top">${t}</a>` : '';
+    const src = (d.src || []).map(u => link(u, u.split('/blob/main/')[1])).join('<br>');
+    const nb = ev.target.neighborhood('node').map(n => n.data('label')).filter(Boolean).join(', ');
+    document.getElementById('info').innerHTML =
+      `<b style="font-size:13px">${d.label}</b> <span class="muted">(${d.kind})</span><p>${d.summary || ''}</p>` +
+      (d.doc ? `<p>${link(d.doc, 'documentation')}</p>` : '') +
+      (src ? `<p><b>source</b><br>${src}</p>` : '') +
+      (d.notes ? `<p><b>notes</b><br><code>${d.notes}</code></p>` : '') +
+      (d.equations && d.equations.length ? `<p><b>equations</b><br><code>${d.equations.join(', ')}</code></p>` : '') +
+      (d.used_by && d.used_by.length ? `<p><b>used by</b><br>${d.used_by.join(', ')}</p>` : '') +
+      `<p class="muted">neighbours: ${nb}</p>`;
+    cy.elements().addClass('dim'); ev.target.closedNeighborhood().removeClass('dim');
+  });
+  cy.on('tap', ev => { if (ev.target === cy) cy.elements().removeClass('dim'); });
+  apply(); relayout();
+});
+</script>
+</body>
+</html>

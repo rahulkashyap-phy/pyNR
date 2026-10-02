@@ -108,4 +108,4 @@ black-hole grids ($\lesssim 64^3$).
 ## Your own machine or cluster
 
 See [Installation](installation.md). pyNR runs on one node with shared-memory
-threads (Numba). MPI domain decomposition is on the [roadmap](roadmap.md).
+threads (Numba). MPI domain decomposition is on the [roadmap](roadmap/index.md).

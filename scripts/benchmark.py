@@ -13,9 +13,11 @@ import numba
 import numpy as np
 
 from pynr.kernels import adm, dissipation
+from pynr.machine import machine_line
 from pynr.thorns import exact
 
 n = int(sys.argv[1]) if len(sys.argv) > 1 else 96
+print("machine:", machine_line())
 h = 0.5
 ax = [h * (np.arange(n) - n / 2 + 0.5)] * 3
 X, Y, Z = np.meshgrid(*ax, indexing="ij")

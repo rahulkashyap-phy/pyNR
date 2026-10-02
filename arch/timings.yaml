@@ -1,0 +1,42 @@
+gauge_wave:
+  aborted: false
+  final_time: 10.0
+  grid: 57 × 9 × 9
+  iterations: 2000
+  machine: Apple M3 Pro, 12 cores (6P+6E), 18 GB, macOS 27.0, Numba 0.67.0, 12 threads
+  wall_time_s: 3.24
+kerr_schild:
+  aborted: true
+  final_time: 24.375
+  grid: 72 × 72 × 72
+  iterations: 390
+  machine: Apple M3 Pro, 12 cores (6P+6E), 18 GB, macOS 27.0, Numba 0.67.0, 12 threads
+  wall_time_s: 57.2
+linear_wave:
+  aborted: false
+  final_time: 5.0
+  grid: 57 × 9 × 9
+  iterations: 1000
+  machine: Apple M3 Pro, 12 cores (6P+6E), 18 GB, macOS 27.0, Numba 0.67.0, 12 threads
+  wall_time_s: 1.72
+schwarzschild_1plog:
+  aborted: true
+  final_time: 5.0
+  grid: 108 × 108 × 108
+  iterations: 100
+  machine: Apple M3 Pro, 12 cores (6P+6E), 18 GB, macOS 27.0, Numba 0.67.0, 12 threads
+  wall_time_s: 45.48
+schwarzschild_geodesic:
+  aborted: true
+  final_time: 1.0
+  grid: 68 × 68 × 68
+  iterations: 20
+  machine: Apple M3 Pro, 12 cores (6P+6E), 18 GB, macOS 27.0, Numba 0.67.0, 12 threads
+  wall_time_s: 2.37
+schwarzschild_perturbed:
+  aborted: false
+  final_time: 36.0
+  grid: 136 × 136 × 136
+  iterations: 576
+  machine: Apple M3 Pro, 12 cores (6P+6E), 18 GB, macOS 27.0, Numba 0.67.0, 12 threads
+  wall_time_s: 592.74

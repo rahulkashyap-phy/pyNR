@@ -123,7 +123,27 @@ def run_summary(run_dir):
     m = re.search(r"ABORT: blow-up.* at iteration (\d+), t = ([0-9.e+-]+)", log)
     if m:
         info["ended by"] = f"blow-up abort (MoL::check_nan_every) at t = {m.group(2)}"
+    info["machine"] = _machine_of(run_dir, log)
     return info
+
+
+def _machine_of(run_dir, log):
+    """Machine from the log's machine block; for older runs, from arch/timings.yaml (same problem)."""
+    m = re.search(r"^# machine: (.*)$", log, re.M)
+    if m:
+        return m.group(1)
+    try:
+        import yaml
+
+        with open(os.path.join(ROOT, "arch", "timings.yaml")) as fh:
+            t = yaml.safe_load(fh) or {}
+        name = os.path.basename(os.path.normpath(run_dir))
+        name = "gauge_wave" if name.startswith("dx") else name
+        if name in t:
+            return t[name]["machine"] + " (machine of the recorded timing run)"
+    except Exception:  # noqa: BLE001
+        pass
+    return "not recorded"
 
 
 def settings_rows(run_dir, keys):
