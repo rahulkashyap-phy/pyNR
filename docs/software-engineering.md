@@ -69,7 +69,7 @@ step, row-vectorised kernels, is on the [roadmap](roadmap/index.md).
 ## Process
 
 - Development happens on `rkdev`. The public `main` branch is updated from it by the maintainer.
-- CI runs the tests (Linux and macOS, several Python versions), the drift check, and the HTML and PDF builds.
+- CI runs the tests (Linux and macOS, several Python versions), the drift check, and the HTML build, which it deploys to GitHub Pages. The PDF lecture notes are built locally with `make -C docs all`.
 - Releases are tagged on `main`; PyPI and Zenodo releases are planned.
 - License: Apache-2.0. Attribution is required through `NOTICE` and the per-file headers, and citation through
   `CITATION.cff` ([License](license.md)).
